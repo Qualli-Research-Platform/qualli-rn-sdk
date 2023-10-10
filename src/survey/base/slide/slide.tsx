@@ -1,41 +1,118 @@
+import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 import type {
-  InputSlide,
-  SelectSlide,
-  MultipleChoiceSlide,
-  StarSlide,
-  NumericSlide,
-  NPSSlide,
-  CSATSlide,
+    InputSlide,
+    SelectSlide,
+    MultipleChoiceSlide,
+    StarSlide,
+    NumericSlide,
+    NPSSlide,
+    CSATSlide,
 } from '../../../types';
 import styles from './../../survey.style';
-import { type } from '../../../types';
+import SurveySlideInput from '../../components/input/inputs';
 
 interface Props {
-  slide:
-    | InputSlide
-    | SelectSlide
-    | MultipleChoiceSlide
-    | StarSlide
-    | NumericSlide
-    | NPSSlide
-    | CSATSlide;
+    slide:
+        | InputSlide
+        | SelectSlide
+        | MultipleChoiceSlide
+        | StarSlide
+        | NumericSlide
+        | NPSSlide
+        | CSATSlide;
+    colorScheme: 'light' | 'dark';
 }
 
 const SurveySlide = (props: Props) => {
-  const slide = props.slide;
+    const { slide, colorScheme } = props;
 
-  if (!slide) return null;
+    const [value, setValue] = useState('');
 
-  const { title, subtitle, type } = slide;
+    if (!slide) return null;
 
-  return (
-    <View>
-      <Text style={styles.base.title}>{title}</Text>
+    const { title, subtitle, type } = slide;
 
-      {subtitle && <Text style={styles.base.subtitle}>{subtitle}</Text>}
-    </View>
-  );
+    const renderSlideInputs = () => {
+        switch (slide.type) {
+            case 'input':
+                return (
+                    <SurveySlideInput
+                        colorScheme={colorScheme}
+                        placeholder={slide?.placeholder}
+                        onChange={(val: string) => setValue(val)}
+                        multiline={!!slide?.multiline}
+                    />
+                );
+            // case 'select':
+            //     return (
+            //     <SurveySlideSelect
+            //         options={slide.options}
+            //         onChange={(val: string) => console.log(val)}
+            //     />
+            //     );
+            // case 'multiple-choice':
+            //     return (
+            //     <SurveySlideMultipleChoice
+            //         options={slide.options}
+            //         onChange={(val: string) => console.log(val)}
+            //     />
+            //     );
+            // case 'star':
+            //     return (
+            //     <SurveySlideStar
+            //         options={slide.options}
+            //         onChange={(val: string) => console.log(val)}
+            //     />
+            //     );
+            // case 'numeric':
+            //     return (
+            //     <SurveySlideNumeric
+            //         onChange={(val: string) => console.log(val)}
+            //     />
+            //     );
+            // case 'nps':
+            //     return (
+            //     <SurveySlideNPS
+            //         onChange={(val: string) => console.log(val)}
+            //     />
+            //     );
+            // case 'csat':
+            //     return (
+            //     <SurveySlideCSAT
+            //         onChange={(val: string) => console.log(val)}
+            //     />
+            //     );
+        }
+    };
+
+    return (
+        <View>
+            <View style={styles.base.headerContainer}>
+                <Text
+                    style={[
+                        styles.base.title,
+                        colorScheme === 'dark' && styles.base.titleDark,
+                    ]}
+                >
+                    {title}
+                </Text>
+
+                {subtitle && (
+                    <Text
+                        style={[
+                            styles.base.subtitle,
+                            colorScheme === 'dark' && styles.base.subtitleDark,
+                        ]}
+                    >
+                        {subtitle}
+                    </Text>
+                )}
+            </View>
+
+            {renderSlideInputs()}
+        </View>
+    );
 };
 
 export default SurveySlide;
