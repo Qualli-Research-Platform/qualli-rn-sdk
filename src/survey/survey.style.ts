@@ -20,7 +20,6 @@ const survey = {
         },
         subtitle: {
             fontSize: 14,
-            fontWeight: 'semibold',
             color: LIGHT_COLOR,
         },
         subtitleDark: {
@@ -50,7 +49,7 @@ const survey = {
                 opacity: 0.5,
             },
             label: {
-                fontWeight: 'semibold',
+                fontWeight: 500,
                 fontSize: 16,
                 textTransform: 'capitalize',
                 color: LIGHT_COLOR,
@@ -94,7 +93,7 @@ const survey = {
                 borderRadius: 8,
                 borderWidth: 1,
                 padding: 16,
-                paddingHorizontal: 24,
+                paddingHorizontal: 16,
             },
             buttonSelected: {
                 backgroundColor: LIGHT_COLOR,
@@ -106,7 +105,7 @@ const survey = {
                 backgroundColor: DARK_COLOR,
             },
             label: {
-                fontWeight: 'semibold',
+                fontWeight: 500,
                 fontSize: 14,
                 color: LIGHT_COLOR,
             },
@@ -119,6 +118,27 @@ const survey = {
             labelDarkSelected: {
                 color: LIGHT_COLOR,
             },
+        },
+        star: {
+            wrapper: {
+                flexDirection: 'row',
+                width: '100%',
+            },
+            button: {
+                width: 60,
+                paddingHorizontal: 5,
+            },
+            icon: {
+                width: 50,
+                height: 50,
+
+                tintColor: LIGHT_COLOR,
+            },
+            iconDark: {
+                tintColor: DARK_COLOR,
+            },
+            iconDarkSelected: {},
+            iconSelected: {},
         },
     },
 };

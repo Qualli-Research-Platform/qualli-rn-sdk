@@ -1,11 +1,10 @@
 import React from 'react';
 import { useState } from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import { TouchableOpacity, Text, ScrollView } from 'react-native';
 import styles from './../../survey.style';
-import { ScrollView } from 'react-native';
 
 interface Props {
-    options: string[];
+    options: { label: string }[];
     onChange: (val: string[]) => void;
     multiple: boolean;
     colorScheme: 'light' | 'dark';
@@ -69,7 +68,7 @@ const SurveySlideSelect = (props: Props) => {
     };
 
     const buttons = options.map((option, index) => {
-        return renderButton(option, index);
+        return renderButton(option.label, index);
     });
 
     return (

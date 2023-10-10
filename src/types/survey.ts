@@ -23,23 +23,22 @@ export interface InputSlide extends Slide {
 export interface SelectSlide extends Slide {
     type: SlideType.select;
     multiple: false;
-    options: string[];
+    options: { label: string }[];
 }
 
 export interface MultipleChoiceSlide extends Slide {
     type: SlideType.multiplechoice;
     multiple: true;
-    options: string[];
+    options: { label: string }[];
 }
 
 export interface StarSlide extends Slide {
     type: SlideType.star;
-    max: 1 | 2 | 3 | 4 | 5;
 }
 
 export interface NumericSlide extends Slide {
     type: SlideType.numeric;
-    options: number[];
+    options: { label: string }[];
 }
 
 export interface NPSSlide extends Slide {
@@ -58,7 +57,7 @@ interface Slide {
 }
 
 interface Style {
-    emojiStyle?: 'outline' | 'coloured' | 'emoji';
+    // iconStyle?: 'outline' | 'coloured' | 'emoji';
     backgroundColor?: string;
     colorScheme: 'light' | 'dark';
 }

@@ -25,11 +25,31 @@ export const SingleSelect: Survey = {
             subtitle: 'Please tell us more about your experience.',
             type: 'select',
             multiple: false,
-            options: ['Feature A', 'Feature B', 'Feature C', 'Feature D'],
+            options: [
+                { label: '😍 LOVE IT' },
+                { label: '🤩 Feature B' },
+                { label: '😇 Feature C' },
+                { label: '😎 Feature D' },
+            ],
         },
     ],
     style: {
         colorScheme: 'dark',
-        backgroundColor: '#D9E5FF',
+        backgroundColor: '#FFAE1A',
+    },
+};
+
+export const Star: Survey = {
+    id: 'star',
+    slides: [
+        {
+            title: 'How was your experience?',
+            subtitle: 'Please tell us more about your experience.',
+            type: 'star',
+        },
+    ],
+    style: {
+        colorScheme: 'dark',
+        backgroundColor: '#FFAE1A',
     },
 };

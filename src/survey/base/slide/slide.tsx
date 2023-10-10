@@ -13,6 +13,7 @@ import styles from './../../survey.style';
 
 import SurveySlideInput from '../../components/input/inputs';
 import SurveySlideSelect from '../../components/select/select';
+import SurveySlideStar from '../../components/star/star';
 
 interface Props {
     slide:
@@ -47,6 +48,7 @@ const SurveySlide = (props: Props) => {
                     />
                 );
             case 'select':
+            case 'multiplechoice':
                 return (
                     <SurveySlideSelect
                         options={slide.options}
@@ -55,20 +57,13 @@ const SurveySlide = (props: Props) => {
                         onChange={(val: string[]) => console.log(val)}
                     />
                 );
-            // case 'multiple-choice':
-            //     return (
-            //     <SurveySlideMultipleChoice
-            //         options={slide.options}
-            //         onChange={(val: string) => console.log(val)}
-            //     />
-            //     );
-            // case 'star':
-            //     return (
-            //     <SurveySlideStar
-            //         options={slide.options}
-            //         onChange={(val: string) => console.log(val)}
-            //     />
-            //     );
+            case 'star':
+                return (
+                    <SurveySlideStar
+                        colorScheme={colorScheme}
+                        onChange={(val: string) => console.log(val)}
+                    />
+                );
             // case 'numeric':
             //     return (
             //     <SurveySlideNumeric
