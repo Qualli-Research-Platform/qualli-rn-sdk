@@ -1,18 +1,19 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'qualli-rn-sdk';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import Survey from '../../src/survey/survey';
+import { SingleText } from './test-surveys';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
+  const [forceOpenInt, setForceOpenInt] = React.useState(0);
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Survey survey={SingleText} forceOpenInt={forceOpenInt} />
+
+      <TouchableOpacity onPress={() => setForceOpenInt(forceOpenInt + 1)}>
+        <Text>{'toggle panel'}</Text>
+      </TouchableOpacity>
     </View>
   );
 }
