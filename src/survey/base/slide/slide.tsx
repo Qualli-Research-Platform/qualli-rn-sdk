@@ -10,7 +10,9 @@ import type {
     CSATSlide,
 } from '../../../types';
 import styles from './../../survey.style';
+
 import SurveySlideInput from '../../components/input/inputs';
+import SurveySlideSelect from '../../components/select/select';
 
 interface Props {
     slide:
@@ -44,13 +46,15 @@ const SurveySlide = (props: Props) => {
                         multiline={!!slide?.multiline}
                     />
                 );
-            // case 'select':
-            //     return (
-            //     <SurveySlideSelect
-            //         options={slide.options}
-            //         onChange={(val: string) => console.log(val)}
-            //     />
-            //     );
+            case 'select':
+                return (
+                    <SurveySlideSelect
+                        options={slide.options}
+                        multiple={!!slide.multiple}
+                        colorScheme={colorScheme}
+                        onChange={(val: string[]) => console.log(val)}
+                    />
+                );
             // case 'multiple-choice':
             //     return (
             //     <SurveySlideMultipleChoice

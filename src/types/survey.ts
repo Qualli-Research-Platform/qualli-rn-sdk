@@ -23,14 +23,12 @@ export interface InputSlide extends Slide {
 export interface SelectSlide extends Slide {
     type: SlideType.select;
     multiple: false;
-    other: boolean;
     options: string[];
 }
 
 export interface MultipleChoiceSlide extends Slide {
     type: SlideType.multiplechoice;
     multiple: true;
-    other: boolean;
     options: string[];
 }
 
@@ -60,7 +58,7 @@ interface Slide {
 }
 
 interface Style {
-    emojiStyle?: 'outline' | 'coloured';
+    emojiStyle?: 'outline' | 'coloured' | 'emoji';
     backgroundColor?: string;
     colorScheme: 'light' | 'dark';
 }

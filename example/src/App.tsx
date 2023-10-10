@@ -2,31 +2,31 @@ import * as React from 'react';
 
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import Survey from '../../src/survey/survey';
-import { SingleText } from './test-surveys';
+import { SingleText, SingleSelect } from './test-surveys';
 
 export default function App() {
-  const [forceOpenInt, setForceOpenInt] = React.useState(0);
+    const [forceOpenInt, setForceOpenInt] = React.useState(0);
 
-  return (
-    <View style={styles.container}>
-      <Survey survey={SingleText} forceOpenInt={forceOpenInt} />
+    return (
+        <View style={styles.container}>
+            <Survey survey={SingleSelect} forceOpenInt={forceOpenInt} />
 
-      <TouchableOpacity onPress={() => setForceOpenInt(forceOpenInt + 1)}>
-        <Text>{'toggle panel'}</Text>
-      </TouchableOpacity>
-    </View>
-  );
+            <TouchableOpacity onPress={() => setForceOpenInt(forceOpenInt + 1)}>
+                <Text>{'toggle panel'}</Text>
+            </TouchableOpacity>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
-  },
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    box: {
+        width: 60,
+        height: 60,
+        marginVertical: 20,
+    },
 });

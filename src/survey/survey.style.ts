@@ -88,6 +88,38 @@ const survey = {
             placeholder: LIGHT_COLOR + 90,
             placeholderDark: DARK_COLOR + 90,
         },
+        select: {
+            button: {
+                borderColor: LIGHT_COLOR,
+                borderRadius: 8,
+                borderWidth: 1,
+                padding: 16,
+                paddingHorizontal: 24,
+            },
+            buttonSelected: {
+                backgroundColor: LIGHT_COLOR,
+            },
+            buttonDark: {
+                borderColor: DARK_COLOR,
+            },
+            buttonDarkSelected: {
+                backgroundColor: DARK_COLOR,
+            },
+            label: {
+                fontWeight: 'semibold',
+                fontSize: 14,
+                color: LIGHT_COLOR,
+            },
+            labelSelected: {
+                color: DARK_COLOR,
+            },
+            labelDark: {
+                color: DARK_COLOR,
+            },
+            labelDarkSelected: {
+                color: LIGHT_COLOR,
+            },
+        },
     },
 };
 
