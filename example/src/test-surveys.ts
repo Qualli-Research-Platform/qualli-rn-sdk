@@ -85,3 +85,53 @@ export const Numeric: Survey = {
         backgroundColor: '#FFAE1A',
     },
 };
+
+export const MultiSlide: Survey = {
+    id: 'multi-slide',
+    slides: [
+        {
+            title: 'How was your experience?',
+            subtitle: 'Please tell us more about your experience.',
+            type: 'input',
+            placeholder: 'Type your answer here...',
+            multiline: false,
+        },
+        {
+            title: 'How was your experience?',
+            subtitle: 'Please tell us more about your experience.',
+            type: 'select',
+            multiple: false,
+            options: [
+                { label: '😍 LOVE IT' },
+                { label: '🤩 Feature B' },
+                { label: '😇 Feature C' },
+                { label: '😎 Feature D' },
+                { label: '😎 Feature D' },
+                { label: '😎 Feature D' },
+                { label: '😎 Feature D' },
+                { label: '😎 Feature D' },
+            ],
+        },
+        {
+            title: 'How was your experience?',
+            subtitle: 'Please tell us more about your experience.',
+            type: 'star',
+        },
+        {
+            title: 'How was your experience?',
+            subtitle: 'Please tell us more about your experience.',
+            type: 'nps',
+        },
+        {
+            title: 'How was your experience?',
+            subtitle: 'Please tell us more about your experience.',
+            type: 'numeric',
+            min: 10,
+            max: 50,
+        },
+    ],
+    style: {
+        colorScheme: 'dark',
+        backgroundColor: '#FFAE1A',
+    },
+};

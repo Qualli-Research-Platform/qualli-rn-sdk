@@ -7,7 +7,7 @@ export interface Survey {
         | StarSlide
         | NumericSlide
         | NPSSlide
-        | CSATSlide
+        // | CSATSlide
     >;
     person?: Person;
     style: Style;
@@ -76,5 +76,5 @@ export enum SlideType {
     'star' = 'star',
     'numeric' = 'numeric',
     'nps' = 'nps',
-    'csat' = 'csat',
+    // 'csat' = 'csat',
 }

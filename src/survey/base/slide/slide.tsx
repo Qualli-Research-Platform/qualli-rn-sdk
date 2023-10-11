@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
+import type { LayoutChangeEvent } from 'react-native';
 import type {
     InputSlide,
     SelectSlide,
@@ -26,16 +27,30 @@ interface Props {
         | NPSSlide
         | CSATSlide;
     colorScheme: 'light' | 'dark';
+    onHeightLayout: (height: number) => void;
 }
 
 const SurveySlide = (props: Props) => {
-    const { slide, colorScheme } = props;
+    const { slide, colorScheme, onHeightLayout } = props;
 
     const [value, setValue] = useState('');
+    const [contentHeight, setContentHeight] = useState(0);
+
+    useEffect(() => {
+        // set height on panel
+        onHeightLayout(contentHeight);
+    }, [contentHeight]);
 
     if (!slide) return null;
 
     const { title, subtitle, type } = slide;
+
+    const handleLayout = (event: LayoutChangeEvent) => {
+        const { height } = event.nativeEvent.layout;
+        if (contentHeight === 0) {
+            setContentHeight(height);
+        }
+    };
 
     const renderSlideInputs = () => {
         switch (slide.type) {
@@ -93,7 +108,7 @@ const SurveySlide = (props: Props) => {
     };
 
     return (
-        <View>
+        <View style={{ padding: 16 }} onLayout={handleLayout}>
             <View style={styles.base.headerContainer}>
                 <Text
                     style={[

@@ -2,14 +2,21 @@ import * as React from 'react';
 
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import Survey from '../../src/survey/survey';
-import { SingleText, SingleSelect, Star, NPS, Numeric } from './test-surveys';
+import {
+    SingleText,
+    SingleSelect,
+    Star,
+    NPS,
+    Numeric,
+    MultiSlide,
+} from './test-surveys';
 
 export default function App() {
     const [forceOpenInt, setForceOpenInt] = React.useState(0);
 
     return (
         <View style={styles.container}>
-            <Survey survey={Numeric} forceOpenInt={forceOpenInt} />
+            <Survey survey={MultiSlide} forceOpenInt={forceOpenInt} />
 
             <TouchableOpacity onPress={() => setForceOpenInt(forceOpenInt + 1)}>
                 <Text>{'toggle panel'}</Text>

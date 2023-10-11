@@ -63,17 +63,17 @@ const styles = StyleSheet.create({
         width: '100%',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-        padding: 16,
+
         paddingBottom: 40,
 
         // iOS shadow properties
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
-            height: -2, // Negative value to create shadow on top
+            height: -3, // Negative value to create shadow on top
         },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
         // Android elevation
         elevation: 5,
     },
