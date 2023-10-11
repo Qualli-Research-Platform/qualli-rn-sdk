@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { TouchableOpacity, Text, ScrollView } from 'react-native';
 import styles from './../../survey.style';
@@ -14,6 +14,10 @@ const SurveySlideSelect = (props: Props) => {
     const { options, onChange, multiple, colorScheme } = props;
 
     const [values, setValues] = useState<string[]>([]);
+
+    useEffect(() => {
+        onChange(values);
+    }, [values]);
 
     const renderButton = (option: string, index: number) => {
         const isSelected = values.includes(option);

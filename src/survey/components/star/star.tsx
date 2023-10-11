@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { TouchableOpacity, Text, View, Image } from 'react-native';
 import styles from './../../survey.style';
@@ -12,6 +12,10 @@ const SurveySlideStar = (props: Props) => {
     const { onChange, colorScheme } = props;
 
     const [value, setValue] = useState<number>(0);
+
+    useEffect(() => {
+        onChange(value.toString());
+    }, [value]);
 
     const renderButton = (option: number, index: number) => {
         const isSelected = value >= index + 1;

@@ -38,7 +38,8 @@ export interface StarSlide extends Slide {
 
 export interface NumericSlide extends Slide {
     type: SlideType.numeric;
-    options: { label: string }[];
+    min: number;
+    max: number;
 }
 
 export interface NPSSlide extends Slide {

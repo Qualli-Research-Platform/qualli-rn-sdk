@@ -14,6 +14,7 @@ import styles from './../../survey.style';
 import SurveySlideInput from '../../components/input/inputs';
 import SurveySlideSelect from '../../components/select/select';
 import SurveySlideStar from '../../components/star/star';
+import SurveySlideNumeric from '../../components/numeric/numeric';
 
 interface Props {
     slide:
@@ -51,9 +52,9 @@ const SurveySlide = (props: Props) => {
             case 'multiplechoice':
                 return (
                     <SurveySlideSelect
+                        colorScheme={colorScheme}
                         options={slide.options}
                         multiple={!!slide.multiple}
-                        colorScheme={colorScheme}
                         onChange={(val: string[]) => console.log(val)}
                     />
                 );
@@ -64,18 +65,24 @@ const SurveySlide = (props: Props) => {
                         onChange={(val: string) => console.log(val)}
                     />
                 );
-            // case 'numeric':
-            //     return (
-            //     <SurveySlideNumeric
-            //         onChange={(val: string) => console.log(val)}
-            //     />
-            //     );
-            // case 'nps':
-            //     return (
-            //     <SurveySlideNPS
-            //         onChange={(val: string) => console.log(val)}
-            //     />
-            //     );
+            case 'numeric':
+                return (
+                    <SurveySlideNumeric
+                        colorScheme={colorScheme}
+                        min={slide?.min || 0}
+                        max={slide?.max || 5}
+                        onChange={(val: string) => console.log(val)}
+                    />
+                );
+            case 'nps':
+                return (
+                    <SurveySlideNumeric
+                        colorScheme={colorScheme}
+                        min={0}
+                        max={10}
+                        onChange={(val: string) => console.log(val)}
+                    />
+                );
             // case 'csat':
             //     return (
             //     <SurveySlideCSAT

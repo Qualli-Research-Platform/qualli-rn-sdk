@@ -140,6 +140,53 @@ const survey = {
             iconDarkSelected: {},
             iconSelected: {},
         },
+        numeric: {
+            wrapper: {
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                width: '100%',
+                justifyContent: 'center',
+            },
+            button: {
+                paddingVertical: 8,
+                paddingHorizontal: 8,
+                borderWidth: 1,
+                borderColor: LIGHT_COLOR,
+                height: 40,
+                borderRadius: 20,
+                marginHorizontal: 4,
+                marginVertical: 4,
+                justifyContent: 'center',
+                alignitems: 'center',
+                minWidth: 40,
+            },
+            buttonDark: {
+                borderColor: DARK_COLOR,
+            },
+            buttonNPS: {
+                width: 40,
+            },
+            buttonSelected: {
+                backgroundColor: LIGHT_COLOR,
+            },
+            buttonSelectedDark: {
+                backgroundColor: DARK_COLOR,
+            },
+            label: {
+                textAlign: 'center',
+                fontWeight: 600,
+                color: LIGHT_COLOR,
+            },
+            labelDark: {
+                color: DARK_COLOR,
+            },
+            labelSelected: {
+                color: DARK_COLOR,
+            },
+            labelSelectedDark: {
+                color: LIGHT_COLOR,
+            },
+        },
     },
 };
 

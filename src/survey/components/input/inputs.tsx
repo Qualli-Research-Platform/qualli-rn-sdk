@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { TextInput } from 'react-native';
 import styles from './../../survey.style';
@@ -14,11 +14,14 @@ const SurveySlideInput = (props: Props) => {
     const { onChange, placeholder, multiline, colorScheme } = props;
     const [value, setValue] = useState('');
 
+    useEffect(() => {
+        onChange(value);
+    }, [value]);
+
     return (
         <TextInput
             onChangeText={(val) => {
                 setValue(val);
-                onChange(val);
             }}
             value={value}
             placeholder={placeholder || 'Type something here'}

@@ -53,3 +53,35 @@ export const Star: Survey = {
         backgroundColor: '#FFAE1A',
     },
 };
+
+export const NPS: Survey = {
+    id: 'nps',
+    slides: [
+        {
+            title: 'How was your experience?',
+            subtitle: 'Please tell us more about your experience.',
+            type: 'nps',
+        },
+    ],
+    style: {
+        colorScheme: 'dark',
+        backgroundColor: '#FFAE1A',
+    },
+};
+
+export const Numeric: Survey = {
+    id: 'numeric',
+    slides: [
+        {
+            title: 'How was your experience?',
+            subtitle: 'Please tell us more about your experience.',
+            type: 'numeric',
+            min: 10,
+            max: 50,
+        },
+    ],
+    style: {
+        colorScheme: 'dark',
+        backgroundColor: '#FFAE1A',
+    },
+};
