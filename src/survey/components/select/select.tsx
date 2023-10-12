@@ -15,10 +15,6 @@ const SurveySlideSelect = (props: Props) => {
 
     const [values, setValues] = useState<string[]>([]);
 
-    useEffect(() => {
-        onChange(values);
-    }, [values]);
-
     const renderButton = (option: string, index: number) => {
         const isSelected = values.includes(option);
 
@@ -27,16 +23,20 @@ const SurveySlideSelect = (props: Props) => {
                 key={index}
                 onPress={() => {
                     if (multiple) {
+                        let vals = [];
+
                         if (isSelected) {
-                            setValues(
-                                values.filter((val: string) => val !== option)
+                            vals = values.filter(
+                                (val: string) => val !== option
                             );
                         } else {
-                            setValues([...values, option]);
+                            vals = [...values, option];
                         }
+                        setValues(vals);
+                        onChange(vals);
                     } else {
-                        if (isSelected) setValues([]);
-                        else setValues([option]);
+                        setValues([option]);
+                        onChange([option]);
                     }
                 }}
                 style={[

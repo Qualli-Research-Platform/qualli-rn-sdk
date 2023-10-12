@@ -12,13 +12,23 @@ import {
 } from './test-surveys';
 
 export default function App() {
-    const [forceOpenInt, setForceOpenInt] = React.useState(0);
+    const [showSurvey, setShowSurvey] = React.useState(false);
+
+    const handleSurveyComplete = (answers: any) => {
+        console.log(answers);
+        setShowSurvey(false);
+    };
 
     return (
         <View style={styles.container}>
-            <Survey survey={MultiSlide} forceOpenInt={forceOpenInt} />
+            <Survey
+                survey={MultiSlide}
+                isVisible={showSurvey}
+                onComplete={handleSurveyComplete}
+                onAbortSurvey={() => setShowSurvey(false)}
+            />
 
-            <TouchableOpacity onPress={() => setForceOpenInt(forceOpenInt + 1)}>
+            <TouchableOpacity onPress={() => setShowSurvey(true)}>
                 <Text>{'toggle panel'}</Text>
             </TouchableOpacity>
         </View>

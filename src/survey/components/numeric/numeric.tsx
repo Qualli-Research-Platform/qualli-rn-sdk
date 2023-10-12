@@ -6,18 +6,14 @@ import styles from './../../survey.style';
 interface Props {
     min: number;
     max: number;
-    onChange: (val: string) => void;
+    onChange: (val: number) => void;
     colorScheme: 'light' | 'dark';
 }
 
 const SurveySlideNumeric = (props: Props) => {
     const { onChange, colorScheme, min, max } = props;
 
-    const [value, setValue] = useState<number>(0);
-
-    useEffect(() => {
-        onChange(value.toString());
-    }, [value]);
+    const [value, setValue] = useState<number>(null);
 
     const renderButton = (option: number, index: number) => {
         const isSelected = value === option;
@@ -48,6 +44,7 @@ const SurveySlideNumeric = (props: Props) => {
                 key={index}
                 onPress={() => {
                     setValue(option);
+                    onChange(option);
                 }}
                 style={buttonStyles}
             >

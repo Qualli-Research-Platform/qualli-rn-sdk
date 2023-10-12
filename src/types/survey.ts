@@ -51,7 +51,8 @@ export interface CSATSlide extends Slide {
 }
 
 // BASE
-interface Slide {
+export interface Slide {
+    id: string;
     title: string;
     subtitle?: string;
     type: SlideType;

@@ -28,12 +28,12 @@ interface Props {
         | CSATSlide;
     colorScheme: 'light' | 'dark';
     onHeightLayout: (height: number) => void;
+    onAnswerChange: (answer: any) => void;
 }
 
 const SurveySlide = (props: Props) => {
-    const { slide, colorScheme, onHeightLayout } = props;
+    const { slide, colorScheme, onHeightLayout, onAnswerChange } = props;
 
-    const [value, setValue] = useState('');
     const [contentHeight, setContentHeight] = useState(0);
 
     useEffect(() => {
@@ -59,7 +59,7 @@ const SurveySlide = (props: Props) => {
                     <SurveySlideInput
                         colorScheme={colorScheme}
                         placeholder={slide?.placeholder}
-                        onChange={(val: string) => setValue(val)}
+                        onChange={(val: string) => onAnswerChange(val)}
                         multiline={!!slide?.multiline}
                     />
                 );
@@ -70,14 +70,14 @@ const SurveySlide = (props: Props) => {
                         colorScheme={colorScheme}
                         options={slide.options}
                         multiple={!!slide.multiple}
-                        onChange={(val: string[]) => console.log(val)}
+                        onChange={(val: any[]) => onAnswerChange(val)}
                     />
                 );
             case 'star':
                 return (
                     <SurveySlideStar
                         colorScheme={colorScheme}
-                        onChange={(val: string) => console.log(val)}
+                        onChange={(val: number) => onAnswerChange(val)}
                     />
                 );
             case 'numeric':
@@ -86,7 +86,7 @@ const SurveySlide = (props: Props) => {
                         colorScheme={colorScheme}
                         min={slide?.min || 0}
                         max={slide?.max || 5}
-                        onChange={(val: string) => console.log(val)}
+                        onChange={(val: number) => onAnswerChange(val)}
                     />
                 );
             case 'nps':
@@ -95,7 +95,7 @@ const SurveySlide = (props: Props) => {
                         colorScheme={colorScheme}
                         min={0}
                         max={10}
-                        onChange={(val: string) => console.log(val)}
+                        onChange={(val: number) => onAnswerChange(val)}
                     />
                 );
             // case 'csat':
@@ -108,7 +108,10 @@ const SurveySlide = (props: Props) => {
     };
 
     return (
-        <View style={{ padding: 16 }} onLayout={handleLayout}>
+        <View
+            style={{ padding: 16, paddingBottom: 60 }}
+            onLayout={handleLayout}
+        >
             <View style={styles.base.headerContainer}>
                 <Text
                     style={[
@@ -132,6 +135,8 @@ const SurveySlide = (props: Props) => {
             </View>
 
             {renderSlideInputs()}
+
+            <View style={{ height: 16 }}></View>
         </View>
     );
 };

@@ -4,7 +4,7 @@ import { TouchableOpacity, Text, View, Image } from 'react-native';
 import styles from './../../survey.style';
 
 interface Props {
-    onChange: (val: string) => void;
+    onChange: (val: number) => void;
     colorScheme: 'light' | 'dark';
 }
 
@@ -12,10 +12,6 @@ const SurveySlideStar = (props: Props) => {
     const { onChange, colorScheme } = props;
 
     const [value, setValue] = useState<number>(0);
-
-    useEffect(() => {
-        onChange(value.toString());
-    }, [value]);
 
     const renderButton = (option: number, index: number) => {
         const isSelected = value >= index + 1;
@@ -25,6 +21,7 @@ const SurveySlideStar = (props: Props) => {
                 key={index}
                 onPress={() => {
                     setValue(index + 1);
+                    onChange(index + 1);
                 }}
                 style={[styles.form.star.button]}
             >

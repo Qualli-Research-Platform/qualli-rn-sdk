@@ -3,11 +3,13 @@ import { Animated, ViewProps } from 'react-native';
 
 interface DynamicHeightViewProps extends ViewProps {
     height: number;
+    delay?: number;
     children: React.ReactNode;
 }
 
 const DynamicHeightView: React.FC<DynamicHeightViewProps> = ({
     height,
+    delay,
     children,
     ...rest
 }) => {
@@ -19,7 +21,7 @@ const DynamicHeightView: React.FC<DynamicHeightViewProps> = ({
         Animated.timing(heightAnim, {
             toValue: height,
             duration: 200,
-            delay: 300,
+            delay: delay !== undefined ? delay : 300,
             useNativeDriver: false,
         }).start();
     }, [height]);
