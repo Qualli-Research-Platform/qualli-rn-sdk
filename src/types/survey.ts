@@ -56,13 +56,16 @@ export interface Slide {
     title: string;
     subtitle?: string;
     type: SlideType;
-    logic?: {
-        type: 'equals' | 'greaterThan' | 'lessThan';
-        valueIndex?: number;
-        value?: string;
-        goToSlideId: string;
-        closeSurvey: boolean;
-    }[];
+    // logic?: {
+    //     conditions: {
+    //         type: 'equals' | 'greaterThan' | 'lessThan';
+    //         valueIndex?: number;
+    //         value?: string;
+    //         goToSlideId: string;
+    //         closeSurvey: boolean;
+    //     }[];
+    //     fallbackSlideId?: string;
+    // };
 }
 
 interface Style {

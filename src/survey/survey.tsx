@@ -16,8 +16,10 @@ import SurveyPanel from './base/panel/panel';
 import SurveySlide from './base/slide/slide';
 import SurveyHeading from './base/heading/heading';
 import DynamicHeightView from '../common/dynamicHeightView';
+import getNextSurveySlideBasedOnLogic from '../helpers/getNextSurveySlideBasedOnLogic';
 
 interface Props {
+    ref: any;
     survey?: SurveyType;
     isVisible?: boolean;
     answers: { [key: string]: any };
@@ -40,8 +42,7 @@ const DIRECT_ANWER_TYPES: SlideType[] = [
 ];
 
 const Survey = (props: Props) => {
-    const { survey, answers, isVisible, onComplete, onAbortSurvey, onAnswer } =
-        props;
+    const { survey, isVisible, onComplete, onAbortSurvey, onAnswer } = props;
     const colorScheme = survey?.style?.colorScheme || 'light';
     const backgroundColor = survey?.style?.backgroundColor || '#000';
 
@@ -54,6 +55,7 @@ const Survey = (props: Props) => {
     const [isSurveyActive, setIsSurveyActive] = useState(false);
     const slideHeights = React.useRef<{}>({});
     const slidesScrollRef = React.useRef(null);
+    const localAnswers = React.useRef({});
     const scrollState = React.useRef<{
         slides: JSX.Element[];
         currentIndex: number;
@@ -101,8 +103,23 @@ const Survey = (props: Props) => {
 
         const slides = [...scrollState.current.slides];
 
+        // first get the current slide
+        // const currentSlide = scrollState?.current?.currentSlide;
+
+        // does this slide have logic? TODO
+        // if (currentSlide?.logic) {
+        //     getNextSurveySlideBasedOnLogic(
+        //         survey,
+        //         currentSlide,
+        //         localAnswers.current
+        //     );
+        // }
+
         // only when going forward
-        if (newIndex > scrollState?.current?.currentIndex || newIndex === 0) {
+        if (
+            newIndex > scrollState?.current?.currentIndex ||
+            (newIndex === 0 && scrollState?.current?.slides.length === 0)
+        ) {
             slides.push(
                 <ScrollView
                     scrollEnabled={false}
@@ -162,6 +179,11 @@ const Survey = (props: Props) => {
         type: SlideType
     ) => {
         onAnswer(slideId, value);
+
+        localAnswers.current = {
+            ...localAnswers?.current,
+            [slideId]: value,
+        };
 
         if (DIRECT_ANWER_TYPES.indexOf(type) > -1) {
             viewNextSlide(scrollState?.current?.currentIndex + 1);

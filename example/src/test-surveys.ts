@@ -167,6 +167,23 @@ export const SimpleMultiSlideWithLogic: Survey = {
     id: 'multi-slide',
     slides: [
         {
+            id: 'slide-0',
+            title: 'How was your experience?',
+            subtitle: 'Please tell us more about your experience.',
+            type: 'input',
+            placeholder: 'Type your answer here...',
+            multiline: false,
+            logic: [
+                {
+                    type: 'equals',
+                    valueIndex: undefined,
+                    value: 'hallo',
+                    goToSlideId: 'slide-2',
+                    closeSurvey: false,
+                },
+            ],
+        },
+        {
             id: 'slide-1',
             title: 'How was your experience?',
             subtitle: 'Please tell us more about your experience.',
@@ -177,15 +194,6 @@ export const SimpleMultiSlideWithLogic: Survey = {
                 { label: '🤩 Feature B' },
                 { label: '😇 Feature C' },
                 { label: '😎 Feature D' },
-            ],
-            logic: [
-                {
-                    type: 'equals',
-                    valueIndex: 0,
-                    value: undefined,
-                    goToSlideId: 'slide-3',
-                    closeSurvey: false,
-                },
             ],
         },
         {
