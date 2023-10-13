@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import Survey from '../../src/survey/survey';
+import { SurveyProvider, useSurvey } from '../../src/providers/surveyProvider';
 import {
     SingleText,
     SingleSelect,
@@ -11,27 +11,27 @@ import {
     MultiSlide,
 } from './test-surveys';
 
-export default function App() {
-    const [showSurvey, setShowSurvey] = React.useState(false);
+const Home = () => {
+    const survey = useSurvey();
 
-    const handleSurveyComplete = (answers: any) => {
-        console.log(answers);
-        setShowSurvey(false);
+    const showSurvey = () => {
+        survey.showSurvey(MultiSlide);
     };
 
     return (
         <View style={styles.container}>
-            <Survey
-                survey={MultiSlide}
-                isVisible={showSurvey}
-                onComplete={handleSurveyComplete}
-                onAbortSurvey={() => setShowSurvey(false)}
-            />
-
-            <TouchableOpacity onPress={() => setShowSurvey(true)}>
+            <TouchableOpacity onPress={showSurvey}>
                 <Text>{'toggle panel'}</Text>
             </TouchableOpacity>
         </View>
+    );
+};
+
+export default function App() {
+    return (
+        <SurveyProvider>
+            <Home />
+        </SurveyProvider>
     );
 }
 

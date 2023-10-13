@@ -14,14 +14,14 @@ const SurveySlideStar = (props: Props) => {
     const [value, setValue] = useState<number>(0);
 
     const renderButton = (option: number, index: number) => {
-        const isSelected = value >= index + 1;
+        const isSelected = value >= option;
 
         return (
             <TouchableOpacity
                 key={index}
                 onPress={() => {
-                    setValue(index + 1);
-                    onChange(index + 1);
+                    setValue(option);
+                    onChange(option);
                 }}
                 style={[styles.form.star.button]}
             >

@@ -78,7 +78,7 @@ const SurveySlideSelect = (props: Props) => {
     return (
         <ScrollView
             showsVerticalScrollIndicator={false}
-            style={{ maxHeight: 300 }}
+            style={{ maxHeight: 400 }}
         >
             {buttons}
         </ScrollView>

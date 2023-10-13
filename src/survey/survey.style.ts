@@ -26,7 +26,7 @@ const survey = {
             color: DARK_COLOR,
         },
         headerContainer: {
-            marginBottom: 32,
+            padding: 16,
         },
         button: {
             full: {
@@ -65,6 +65,24 @@ const survey = {
             labelUnderlineDark: {
                 color: DARK_COLOR,
             },
+        },
+    },
+    slide: {
+        CTAContainer: {
+            padding: 16,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexDirection: 'row',
+            width: '100%',
+        },
+        previousButton: {
+            marginRight: 16,
+        },
+        prevArrow: {
+            tintColor: LIGHT_COLOR,
+        },
+        prevArrowDark: {
+            tintColor: DARK_COLOR,
         },
     },
     form: {
@@ -126,7 +144,10 @@ const survey = {
             },
             button: {
                 width: 60,
+                height: 60,
                 paddingHorizontal: 5,
+                alignItens: 'center',
+                justifyContent: 'center',
             },
             icon: {
                 width: 50,

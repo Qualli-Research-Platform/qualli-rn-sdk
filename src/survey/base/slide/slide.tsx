@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import type { LayoutChangeEvent } from 'react-native';
 import type {
     InputSlide,
@@ -16,6 +16,7 @@ import SurveySlideInput from '../../components/input/inputs';
 import SurveySlideSelect from '../../components/select/select';
 import SurveySlideStar from '../../components/star/star';
 import SurveySlideNumeric from '../../components/numeric/numeric';
+import Button from '../../components/button/button';
 
 interface Props {
     slide:
@@ -29,10 +30,19 @@ interface Props {
     colorScheme: 'light' | 'dark';
     onHeightLayout: (height: number) => void;
     onAnswerChange: (answer: any) => void;
+    onPrevious?: () => void;
+    onNext?: () => void;
 }
 
 const SurveySlide = (props: Props) => {
-    const { slide, colorScheme, onHeightLayout, onAnswerChange } = props;
+    const {
+        slide,
+        colorScheme,
+        onHeightLayout,
+        onAnswerChange,
+        onPrevious,
+        onNext,
+    } = props;
 
     const [contentHeight, setContentHeight] = useState(0);
 
@@ -47,6 +57,7 @@ const SurveySlide = (props: Props) => {
 
     const handleLayout = (event: LayoutChangeEvent) => {
         const { height } = event.nativeEvent.layout;
+
         if (contentHeight === 0) {
             setContentHeight(height);
         }
@@ -107,11 +118,10 @@ const SurveySlide = (props: Props) => {
         }
     };
 
+    const _showCTA = onNext || onPrevious;
+
     return (
-        <View
-            style={{ padding: 16, paddingBottom: 60 }}
-            onLayout={handleLayout}
-        >
+        <View onLayout={handleLayout}>
             <View style={styles.base.headerContainer}>
                 <Text
                     style={[
@@ -134,9 +144,35 @@ const SurveySlide = (props: Props) => {
                 )}
             </View>
 
-            {renderSlideInputs()}
+            <View style={{ padding: 16 }}>{renderSlideInputs()}</View>
 
-            <View style={{ height: 16 }}></View>
+            {_showCTA && (
+                <View style={styles.slide.CTAContainer}>
+                    {!!onPrevious ? (
+                        <TouchableOpacity onPress={onPrevious}>
+                            <Image
+                                style={[
+                                    styles.slide.prevArrow,
+                                    colorScheme === 'dark' &&
+                                        styles.slide.prevArrowDark,
+                                ]}
+                                source={require('./../../../assets/icons/arrow-left.png')}
+                            />
+                        </TouchableOpacity>
+                    ) : (
+                        <View />
+                    )}
+
+                    {!!onNext && (
+                        <Button
+                            onClick={onNext}
+                            disabled={false}
+                            colorScheme={colorScheme}
+                            cta="Next"
+                        />
+                    )}
+                </View>
+            )}
         </View>
     );
 };

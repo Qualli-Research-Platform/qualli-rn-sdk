@@ -6,8 +6,6 @@ import {
     ScrollView,
     Dimensions,
     Keyboard,
-    TouchableOpacity,
-    Image,
 } from 'react-native';
 
 import { type Survey as SurveyType } from './../types';
@@ -17,16 +15,15 @@ import type { Slide } from '../types/survey';
 import SurveyPanel from './base/panel/panel';
 import SurveySlide from './base/slide/slide';
 import SurveyHeading from './base/heading/heading';
-import Button from './components/button/button';
 import DynamicHeightView from '../common/dynamicHeightView';
 
-import colors from '../styles/colors';
-
 interface Props {
-    survey: SurveyType;
+    survey?: SurveyType;
     isVisible?: boolean;
-    onComplete: (answers: any) => void;
-    onAbortSurvey: (answers: any) => void;
+    answers: { [key: string]: any };
+    onComplete: () => void;
+    onAbortSurvey: () => void;
+    onAnswer: (slideId: string, answer: any) => void;
 }
 
 const SHOW_NEXT_TYPES: SlideType[] = [
@@ -43,12 +40,18 @@ const DIRECT_ANWER_TYPES: SlideType[] = [
 ];
 
 const Survey = (props: Props) => {
+    const { survey, answers, isVisible, onComplete, onAbortSurvey, onAnswer } =
+        props;
+    const colorScheme = survey?.style?.colorScheme || 'light';
+    const backgroundColor = survey?.style?.backgroundColor || '#000';
+
     const [currentState, setCurrentState] = useState({
         currentIndex: -1,
         slideHeights: {},
+        completed: false,
     });
     const [isNew, setIsNew] = useState(true);
-    const [answers, setAnswers] = useState<any[]>([]);
+    const [isSurveyActive, setIsSurveyActive] = useState(false);
     const slideHeights = React.useRef<{}>({});
     const slidesScrollRef = React.useRef(null);
     const scrollState = React.useRef<{
@@ -63,11 +66,15 @@ const Survey = (props: Props) => {
         currentSlide: undefined,
     });
 
-    const { survey, isVisible, onComplete, onAbortSurvey } = props;
+    useEffect(() => {
+        if (isVisible) setIsSurveyActive(true);
+    }, [isVisible]);
 
     useEffect(() => {
         if (isVisible && scrollState?.current?.slides.length === 0) {
             viewNextSlide(0);
+        } else if (!isVisible) {
+            resetState();
         }
     }, [isVisible]);
 
@@ -76,76 +83,103 @@ const Survey = (props: Props) => {
             scrollViewScrollTo(scrollState?.current?.currentIndex);
     }, [currentState.currentIndex]);
 
-    const viewNextSlide = (newIndex: number, givenAnswers?: any) => {
+    useEffect(() => {
+        if (currentState.completed) {
+            onComplete();
+        }
+    }, [currentState.completed]);
+
+    const viewNextSlide = (newIndex: number) => {
         // if we went forward in our index -> add in the next slide
         // if we went back in our index -> keep the last slide for now
-        let renderUntilIndex = scrollState?.current?.currentIndex;
-
-        if (newIndex > scrollState?.current?.currentIndex) {
-            renderUntilIndex = newIndex;
-        }
 
         // did we reach the end?
         if (newIndex > survey.slides.length - 1) {
-            onComplete(givenAnswers || answers);
+            setCurrentState({ ...currentState, completed: true });
+            return;
         }
 
-        const newSlides = [];
-        for (let i = 0; i < renderUntilIndex + 1; i++) {
-            newSlides.push(
+        const slides = [...scrollState.current.slides];
+
+        // only when going forward
+        if (newIndex > scrollState?.current?.currentIndex || newIndex === 0) {
+            slides.push(
                 <ScrollView
                     scrollEnabled={false}
-                    key={i}
+                    key={newIndex}
                     style={[
-                        styles.slide,
                         {
                             width: Dimensions.get('window').width,
                         },
                     ]}
                 >
                     <SurveySlide
-                        slide={survey.slides[i]}
+                        slide={survey.slides[newIndex]}
                         colorScheme={colorScheme}
                         onHeightLayout={(height) => {
                             handleSlideHeightChange(
                                 height,
-                                survey.slides[i]?.id
+                                survey.slides[newIndex]?.id
                             );
                         }}
-                        onAnswerChange={(val) => onSlideAnswerChange(i, val)}
+                        onAnswerChange={(val) => {
+                            onSlideAnswerChange(
+                                survey.slides[newIndex]?.id,
+                                val,
+                                survey.slides[newIndex]?.type
+                            );
+                        }}
+                        onNext={
+                            SHOW_NEXT_TYPES.indexOf(
+                                survey.slides[newIndex]?.type
+                            ) > -1
+                                ? () => nextPress()
+                                : undefined
+                        }
+                        onPrevious={
+                            newIndex > 0 ? () => prevPress() : undefined
+                        }
                     />
                 </ScrollView>
             );
         }
 
         scrollState.current = {
-            slides: newSlides,
+            slides: slides,
             currentIndex: newIndex,
             currentSlide: survey.slides[newIndex],
             showNext:
                 SHOW_NEXT_TYPES.indexOf(survey.slides[newIndex]?.type) > -1,
         };
+
         // trigger a re-render
         setCurrentState({ ...currentState, currentIndex: newIndex });
     };
 
-    const onPanelClose = () => {
-        scrollState.current = { slides: [], currentIndex: 0, showNext: false };
-        slideHeights.current = {};
-        setCurrentState({ currentIndex: -1, slideHeights: {} });
-        setIsNew(true);
+    const onSlideAnswerChange = (
+        slideId: string,
+        value: any,
+        type: SlideType
+    ) => {
+        onAnswer(slideId, value);
+
+        if (DIRECT_ANWER_TYPES.indexOf(type) > -1) {
+            viewNextSlide(scrollState?.current?.currentIndex + 1);
+        }
     };
 
-    const onSlideAnswerChange = (index: number, value: any) => {
-        // slides that are text / multiple choice should not automatically progress
-        const slide = survey.slides[index];
-        const newAnswers = [...answers];
-        newAnswers[`${index}`] = value;
-        setAnswers(newAnswers);
+    const onPanelDoneClosing = () => {
+        setIsSurveyActive(false);
+    };
 
-        if (DIRECT_ANWER_TYPES.indexOf(slide?.type) > -1) {
-            viewNextSlide(scrollState?.current?.currentIndex + 1, answers);
-        }
+    const resetState = () => {
+        scrollState.current = { slides: [], currentIndex: 0, showNext: false };
+        slideHeights.current = {};
+        setCurrentState({
+            currentIndex: -1,
+            slideHeights: {},
+            completed: false,
+        });
     };
 
     const scrollViewScrollTo = (index: number) => {
@@ -175,6 +209,7 @@ const Survey = (props: Props) => {
             });
         }
     };
+
     const nextPress = () => {
         // check if we're on the last slide already
         if (
@@ -193,35 +228,41 @@ const Survey = (props: Props) => {
 
     const handleSlideHeightChange = (height: number, slideId: number) => {
         const newSlideHeights = { ...slideHeights.current };
-        newSlideHeights[slideId] = height;
+        newSlideHeights[slideId] = height > 0 ? height : 100;
         slideHeights.current = newSlideHeights;
 
-        setCurrentState({ ...currentState, slideHeights: newSlideHeights });
+        setCurrentState((prevState) => ({
+            ...prevState,
+            slideHeights: newSlideHeights,
+        }));
     };
 
-    const colorScheme = survey.style?.colorScheme || 'light';
+    if (!survey || !isSurveyActive) {
+        return null;
+    }
 
     return (
         <SurveyPanel
-            backgroundColor={survey?.style?.backgroundColor || 'white'}
+            backgroundColor={backgroundColor}
             isVisible={!!isVisible}
-            onClose={onPanelClose}
+            onDoneClosing={onPanelDoneClosing}
         >
             <View style={styles.headingWrapper}>
                 <SurveyHeading
                     colorScheme={colorScheme}
-                    onClose={() => onAbortSurvey(answers)}
+                    onClose={onAbortSurvey}
                     numberOfSlides={survey?.slides?.length || 1}
                     currentSlideIndex={1}
                 />
             </View>
 
             <DynamicHeightView
-                style={styles.innerScrollContainer}
                 height={
-                    slideHeights.current[
-                        `${scrollState?.current?.currentSlide?.id}`
-                    ] || 100
+                    !isVisible
+                        ? 0
+                        : slideHeights.current[
+                              `${scrollState?.current?.currentSlide?.id}`
+                          ] || 100
                 }
                 delay={
                     (scrollState?.current?.currentIndex === 0 && isNew) ||
@@ -243,38 +284,6 @@ const Survey = (props: Props) => {
                 >
                     {scrollState?.current?.slides}
                 </ScrollView>
-                {(scrollState?.current?.currentIndex > 0 ||
-                    scrollState?.current?.showNext) && (
-                    <View style={styles.CTAContainer}>
-                        {scrollState?.current?.currentIndex > 0 ? (
-                            <TouchableOpacity onPress={prevPress}>
-                                <Image
-                                    style={[
-                                        styles.prevArrow,
-                                        colorScheme === 'dark' &&
-                                            styles.prevArrowDark,
-                                    ]}
-                                    source={require('./../assets/icons/arrow-left.png')}
-                                />
-                            </TouchableOpacity>
-                        ) : (
-                            <View />
-                        )}
-
-                        {scrollState?.current?.showNext && (
-                            <Button
-                                onClick={nextPress}
-                                disabled={
-                                    answers[
-                                        `${scrollState?.current?.currentIndex}`
-                                    ] === (undefined || '')
-                                }
-                                colorScheme={colorScheme}
-                                cta="Next"
-                            />
-                        )}
-                    </View>
-                )}
             </DynamicHeightView>
         </SurveyPanel>
     );
@@ -288,33 +297,6 @@ const styles = StyleSheet.create({
     headingWrapper: {
         paddingHorizontal: 16,
         paddingTop: 16,
-    },
-    CTAContainer: {
-        padding: 16,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        flexDirection: 'row',
-        position: 'absolute',
-        width: '100%',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 200,
-    },
-    previousButton: {
-        marginRight: 16,
-    },
-    innerScrollContainer: {
-        width: '100%',
-    },
-    slide: {
-        width: Dimensions.get('window').width,
-    },
-    prevArrow: {
-        tintColor: 'white',
-    },
-    prevArrowDark: {
-        tintColor: colors.darkestGrey,
     },
 });
 

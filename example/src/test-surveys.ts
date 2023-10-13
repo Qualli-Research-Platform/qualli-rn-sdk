@@ -4,6 +4,7 @@ export const SingleText: Survey = {
     id: 'single-text',
     slides: [
         {
+            id: 'slide-1',
             title: 'How was your experience?',
             subtitle: 'Please tell us more about your experience.',
             type: 'input',
@@ -21,6 +22,7 @@ export const SingleSelect: Survey = {
     id: 'single-select',
     slides: [
         {
+            id: 'slide-1',
             title: 'How was your experience?',
             subtitle: 'Please tell us more about your experience.',
             type: 'select',
@@ -43,6 +45,7 @@ export const Star: Survey = {
     id: 'star',
     slides: [
         {
+            id: 'slide-1',
             title: 'How was your experience?',
             subtitle: 'Please tell us more about your experience.',
             type: 'star',
@@ -58,6 +61,7 @@ export const NPS: Survey = {
     id: 'nps',
     slides: [
         {
+            id: 'slide-1',
             title: 'How was your experience?',
             subtitle: 'Please tell us more about your experience.',
             type: 'nps',
@@ -73,6 +77,7 @@ export const Numeric: Survey = {
     id: 'numeric',
     slides: [
         {
+            id: 'slide-1',
             title: 'How was your experience?',
             subtitle: 'Please tell us more about your experience.',
             type: 'numeric',
@@ -150,6 +155,64 @@ export const MultiSlide: Survey = {
             type: 'numeric',
             min: 10,
             max: 50,
+        },
+    ],
+    style: {
+        colorScheme: 'dark',
+        backgroundColor: '#FFAE1A',
+    },
+};
+
+export const SimpleMultiSlideWithLogic: Survey = {
+    id: 'multi-slide',
+    slides: [
+        {
+            id: 'slide-1',
+            title: 'How was your experience?',
+            subtitle: 'Please tell us more about your experience.',
+            type: 'select',
+            multiple: false,
+            options: [
+                { label: '😍 LOVE IT' },
+                { label: '🤩 Feature B' },
+                { label: '😇 Feature C' },
+                { label: '😎 Feature D' },
+            ],
+            logic: [
+                {
+                    type: 'equals',
+                    valueIndex: 0,
+                    value: undefined,
+                    goToSlideId: 'slide-3',
+                    closeSurvey: false,
+                },
+            ],
+        },
+        {
+            id: 'slide-2',
+            title: 'Slide 2?',
+            subtitle: 'Please tell us more about your experience.',
+            type: 'select',
+            multiple: false,
+            options: [
+                { label: '😍 LOVE IT' },
+                { label: '🤩 Feature B' },
+                { label: '😇 Feature C' },
+                { label: '😎 Feature D' },
+            ],
+        },
+        {
+            id: 'slide-3',
+            title: 'Slide 3?',
+            subtitle: 'Please tell us more about your experience.',
+            type: 'select',
+            multiple: false,
+            options: [
+                { label: '😍 LOVE IT' },
+                { label: '🤩 Feature B' },
+                { label: '😇 Feature C' },
+                { label: '😎 Feature D' },
+            ],
         },
     ],
     style: {
