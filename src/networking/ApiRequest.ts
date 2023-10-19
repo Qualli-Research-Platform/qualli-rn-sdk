@@ -1,3 +1,5 @@
+import getDeviceMetaData from '../helpers/getDeviceMetaData';
+
 interface Props {
     apiKey: string;
     url: string;
@@ -8,6 +10,7 @@ interface Props {
 
 const ApiRequest = async (props: Props) => {
     const { apiKey, url, method, headers, body } = props;
+    const deviceMetaData = JSON.stringify(await getDeviceMetaData());
 
     try {
         const options = {
@@ -17,7 +20,9 @@ const ApiRequest = async (props: Props) => {
                 'Content-Type': 'application/json',
                 ...headers,
             },
-            body: body ? JSON.stringify(body) : null,
+            body: body
+                ? JSON.stringify({ ...body, event_metadata: deviceMetaData })
+                : JSON.stringify({ event_metadata: deviceMetaData }),
         };
 
         const response = await fetch(url, options);

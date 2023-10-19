@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { Platform, NativeModules } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
 const getDeviceMetaData = async () => {
@@ -7,8 +7,7 @@ const getDeviceMetaData = async () => {
         os_version: string;
         manufacturer: string;
         device_id: string;
-        is_tablet: boolean;
-        locale: string;
+        is_tablet: string;
         system_name: string;
         build_number: string;
         bundle_id: string;
@@ -18,53 +17,42 @@ const getDeviceMetaData = async () => {
         os_version: '',
         manufacturer: '',
         device_id: '',
-        is_tablet: false,
+        is_tablet: 'no',
         system_name: '',
         build_number: '',
         bundle_id: '',
         brand: '',
-        locale: '',
     };
 
     // // App Version
     metadata.app_version = DeviceInfo.getVersion();
 
-    // // OS Version
-    // metadata.os_version = DeviceInfo.getSystemVersion();
+    // OS Version
+    metadata.os_version = DeviceInfo.getSystemVersion();
 
-    // // Timezone
-    // // metadata.timezone = DeviceInfo.getTimezone();
+    // Timezone
+    // metadata.timezone = DeviceInfo.getTimezone();
 
-    // // metadata.locale = '';
+    // Manufacturer
+    metadata.manufacturer = await DeviceInfo.getManufacturer();
 
-    // // if (Platform.OS === 'ios') {
-    // //     metadata.locale =
-    // //         NativeModules.SettingsManager.settings.AppleLocale ||
-    // //         NativeModules.SettingsManager.settings.AppleLanguages[0];
-    // // } else if (Platform.OS === 'android') {
-    // //     metadata.locale = NativeModules.I18nManager.localeIdentifier; // "fr_FR"
-    // // }
+    // Device ID
+    metadata.device_id = DeviceInfo.getDeviceId();
 
-    // // Manufacturer
-    // metadata.manufacturer = await DeviceInfo.getManufacturer();
+    // Is Tablet
+    metadata.is_tablet = DeviceInfo.isTablet() ? 'yes' : 'no';
 
-    // // Device ID
-    // metadata.device_id = DeviceInfo.getDeviceId();
+    // System Name
+    metadata.system_name = Platform.OS;
 
-    // // Is Tablet
-    // metadata.is_tablet = DeviceInfo.isTablet();
+    // Build Number
+    metadata.build_number = DeviceInfo.getBuildNumber();
 
-    // // System Name
-    // metadata.system_name = Platform.OS;
+    // Bundle Id
+    metadata.bundle_id = DeviceInfo.getBundleId();
 
-    // // Build Number
-    // metadata.build_number = DeviceInfo.getBuildNumber();
-
-    // // Bundle Id
-    // metadata.bundle_id = DeviceInfo.getBundleId();
-
-    // // Brand
-    // metadata.brand = DeviceInfo.getBrand();
+    // Brand
+    metadata.brand = DeviceInfo.getBrand();
 
     return metadata;
 };

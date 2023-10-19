@@ -3,19 +3,25 @@ import React, {
     useRef,
     useEffect,
     useState,
+    useContext,
     type ReactNode,
 } from 'react';
 import { AppState } from 'react-native';
-import { SurveyProvider } from './surveyProvider';
-import ApiManager from '../networking/ApiManager';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import ApiManager from '../networking/ApiManager';
 import getDeviceMetaData from '../helpers/getDeviceMetaData';
+
+import { SurveyActions } from '../types/survey';
+
+import SurveyWrapper from '../survey/survey-wrapper';
 
 // Define the shape of your context
 interface QualliContextProps {
     user: any; // Define your user type
     login: (username: string, password: string) => void;
     logout: () => void;
+    performTrigger: (trigger: string) => void;
 }
 
 interface QualliProviderProps {
@@ -40,6 +46,10 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
         authenticating: false,
         sessionKey: undefined,
         userKey: undefined,
+    });
+
+    const [surveyState, setSurveyState] = useState({
+        survey: undefined,
     });
 
     const appState = useRef(AppState.currentState);
@@ -109,25 +119,72 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
 
         // in the background set the users latest attributes
         updateUserBaseAttributes();
-        r;
     };
 
     const updateUserBaseAttributes = async () => {
         const baseAttributes = await getDeviceMetaData();
-        ApiManager.setUserAttributes(
+
+        await ApiManager.setUserAttributes(
             apiKey,
             authState.current.sessionKey,
             baseAttributes
         );
     };
 
-    const logEvent = (event: string, timestamp: Date) => {
+    const logEvent = (event: string, payload: {}) => {
         // Implement logout logic with API
     };
 
+    const logSurveyAction = async (
+        surveyUniqueId: any,
+        action: SurveyActions,
+        data: any
+    ) => {
+        ApiManager.logSurveyAction(
+            apiKey,
+            authState.current.sessionKey,
+            surveyUniqueId,
+            action,
+            data
+        );
+        console.log(surveyUniqueId, action, data);
+    };
+
+    const performTrigger = async (trigger: string) => {
+        const res = await ApiManager.performTrigger(
+            apiKey,
+            authState.current.sessionKey,
+            { name: trigger }
+        );
+
+        // if success -> see if we have any open surveys
+        if (res?.success) {
+            // see if we have any open surveys
+            const surveys = res?.data?.surveys?.data;
+
+            if (surveys?.length > 0) {
+                setSurveyState({ survey: surveys[0] });
+                return;
+            }
+        }
+        setSurveyState({ survey: undefined });
+    };
+
     return (
-        <QualliContext.Provider value={{ user }}>
-            <SurveyProvider>{children}</SurveyProvider>
+        <QualliContext.Provider value={{ user, performTrigger }}>
+            {children}
+            <SurveyWrapper
+                survey={surveyState?.survey}
+                logSurveyAction={logSurveyAction}
+            />
         </QualliContext.Provider>
     );
+};
+
+export const useQualli = () => {
+    const context = useContext(QualliContext);
+    if (!context) {
+        throw new Error('useQually must be used within a QualliProvider');
+    }
+    return context;
 };

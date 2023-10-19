@@ -1,6 +1,6 @@
 {
     "name": "qualli-rn-sdk",
-    "version": "0.1.0",
+    "version": "0.0.0-local.0",
     "description": "Qualli React Native SDK - Product Research on auto-pilot",
     "main": "lib/commonjs/index",
     "module": "lib/module/index",
@@ -10,6 +10,9 @@
     "files": [
         "src",
         "lib",
+        "!**/__tests__",
+        "!**/__fixtures__",
+        "!**/__mocks__",
         "android",
         "ios",
         "cpp",
@@ -20,9 +23,6 @@
         "!android/gradlew",
         "!android/gradlew.bat",
         "!android/local.properties",
-        "!**/__tests__",
-        "!**/__fixtures__",
-        "!**/__mocks__",
         "!**/.*"
     ],
     "scripts": {
@@ -67,7 +67,7 @@
         "prettier": "^3.0.3",
         "react": "18.2.0",
         "react-native": "0.72.5",
-        "react-native-builder-bob": "^0.20.0",
+        "react-native-builder-bob": "^0.23.1",
         "react-native-device-info": "^10.11.0",
         "release-it": "^15.0.0",
         "typescript": "^5.0.2"
@@ -76,10 +76,8 @@
         "@types/react": "17.0.21"
     },
     "peerDependencies": {
-        "@react-native-async-storage/async-storage": "*",
         "react": "*",
-        "react-native": "*",
-        "react-native-device-info": "*"
+        "react-native": "*"
     },
     "workspaces": [
         "example"
@@ -153,12 +151,7 @@
         "targets": [
             "commonjs",
             "module",
-            [
-                "typescript",
-                {
-                    "project": "tsconfig.build.json"
-                }
-            ]
+            "typescript"
         ]
     },
     "dependencies": {

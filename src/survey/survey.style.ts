@@ -93,9 +93,10 @@ const survey = {
                 borderWidth: 1,
                 padding: 16,
                 fontSize: 14,
-                color: DARK_COLOR,
+                color: LIGHT_COLOR,
             },
             inputDark: {
+                color: DARK_COLOR,
                 borderColor: DARK_COLOR,
             },
             inputMultiline: {

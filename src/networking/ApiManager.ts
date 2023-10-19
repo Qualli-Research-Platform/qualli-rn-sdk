@@ -1,11 +1,12 @@
-const API_BASE_PATH = 'https://2585-84-197-164-43.ngrok-free.app/api/';
+const API_BASE_PATH =
+    'https://4d6b-2a02-1810-c27-3800-75d5-ccc9-aaf6-a94a.ngrok-free.app/api/';
 
+import type { SurveyActions } from '../types/survey';
 import apiRequest from './ApiRequest';
 
 const ApiManager = {
     identify: async (apiKey: string, userKey?: string) => {
         const url = `${API_BASE_PATH}app-user/identify`;
-        console.log(url);
         try {
             const jsonResponse = await apiRequest({
                 apiKey,
@@ -30,7 +31,7 @@ const ApiManager = {
     setUserAttributes: async (
         apiKey: string,
         userSessionKey: string,
-        attributes: {}
+        attributes: any
     ) => {
         if (Object.keys(attributes).length === 0) {
             console.log('QUALLI: No attributes to send');
@@ -39,11 +40,10 @@ const ApiManager = {
 
         const url = `${API_BASE_PATH}app-user/set-attributes`;
 
-        if (!userKey) {
+        if (!userSessionKey) {
             console.error('QUALLI: No session ID available');
             return;
         }
-
         const headers = { 'user-session-key': userSessionKey };
 
         try {
@@ -52,11 +52,80 @@ const ApiManager = {
                 url,
                 method: 'POST',
                 headers,
-                body: attributes,
+                body: { attributes, timestamp: new Date() },
             });
             console.log('QUALLI: Successfully set user attributes');
         } catch (error) {
             console.error('QUALLI: Error setting user attributes: ', error);
+        }
+    },
+
+    performTrigger: async (
+        apiKey: string,
+        userSessionKey: string,
+        trigger: { name: string }
+    ) => {
+        if (!trigger?.name) {
+            console.log('QUALLI: Invalid trigger');
+            return;
+        }
+
+        const url = `${API_BASE_PATH}app-user-events/trigger`;
+
+        if (!userSessionKey) {
+            console.error('QUALLI: No session ID available');
+            return;
+        }
+        const headers = { 'user-session-key': userSessionKey };
+
+        try {
+            const jsonResponse = await apiRequest({
+                apiKey,
+                url,
+                method: 'POST',
+                headers,
+                body: { trigger, timestamp: new Date() },
+            });
+
+            if (jsonResponse.success) {
+                console.log('QUALLI: Successfully performed trigger');
+                return jsonResponse;
+            } else {
+                console.error('QUALLI: Error performing trigger');
+            }
+        } catch (error) {
+            console.error('QUALLI: Error performing trigger: ', error);
+        }
+    },
+
+    logSurveyAction: async (
+        apiKey: string,
+        userSessionKey: string,
+        uniqueId: string,
+        action: SurveyActions,
+        data: {}
+    ) => {
+        const url = `${API_BASE_PATH}surveys/${uniqueId}/action`;
+
+        if (!userSessionKey) {
+            console.error('QUALLI: No session ID available');
+            return;
+        }
+        const headers = { 'user-session-key': userSessionKey };
+
+        console.log({ action, data, timestamp: new Date() });
+        try {
+            await apiRequest({
+                apiKey,
+                url,
+                method: 'POST',
+                headers,
+                body: { action, data, timestamp: new Date() },
+            });
+            console.log('QUALLI: Successfully logged the survey action');
+        } catch (error) {
+            console.log(error.response);
+            console.error('QUALLI: Error logging the survey action: ', error);
         }
     },
 };

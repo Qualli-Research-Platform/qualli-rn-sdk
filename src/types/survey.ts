@@ -1,5 +1,5 @@
 export interface Survey {
-    id: string;
+    unique_identifier: string;
     slides: Array<
         | InputSlide
         | SelectSlide
@@ -52,7 +52,7 @@ export interface CSATSlide extends Slide {
 
 // BASE
 export interface Slide {
-    id: string;
+    unique_identifier: string;
     title: string;
     subtitle?: string;
     type: SlideType;
@@ -88,4 +88,10 @@ export enum SlideType {
     'numeric' = 'numeric',
     'nps' = 'nps',
     // 'csat' = 'csat',
+}
+
+export enum SurveyActions {
+    SURVEY_SHOWN = 'survey_shown',
+    SURVEY_COMPLETED = 'survey_completed',
+    SURVEY_SKIPPED = 'survey_skipped',
 }

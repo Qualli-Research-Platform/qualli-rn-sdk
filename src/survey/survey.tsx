@@ -136,12 +136,12 @@ const Survey = (props: Props) => {
                         onHeightLayout={(height) => {
                             handleSlideHeightChange(
                                 height,
-                                survey.slides[newIndex]?.id
+                                survey.slides[newIndex]?.unique_identifier
                             );
                         }}
                         onAnswerChange={(val) => {
                             onSlideAnswerChange(
-                                survey.slides[newIndex]?.id,
+                                survey.slides[newIndex]?.unique_identifier,
                                 val,
                                 survey.slides[newIndex]?.type
                             );
@@ -283,7 +283,7 @@ const Survey = (props: Props) => {
                     !isVisible
                         ? 0
                         : slideHeights.current[
-                              `${scrollState?.current?.currentSlide?.id}`
+                              `${scrollState?.current?.currentSlide?.unique_identifier}`
                           ] || 100
                 }
                 delay={

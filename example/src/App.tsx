@@ -1,8 +1,7 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { SurveyProvider, useSurvey } from '../../src/providers/surveyProvider';
-import { QualliProvider } from '../../src/providers/QualliProvider';
+import { QualliProvider, useQualli } from '../../src/providers/QualliProvider';
 import {
     SingleText,
     SingleSelect,
@@ -14,16 +13,40 @@ import {
 } from './test-surveys';
 
 const Home = () => {
-    const survey = useSurvey();
-
-    const showSurvey = () => {
-        survey.showSurvey(SimpleMultiSlideWithLogic);
-    };
+    const qualli = useQualli();
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={showSurvey}>
+            {/* <TouchableOpacity onPress={showSurvey}>
                 <Text>{'toggle panel'}</Text>
+            </TouchableOpacity> */}
+
+            <TouchableOpacity
+                onPress={() => qualli.performTrigger('SUBSCRIBE')}
+                style={{ marginTop: 20 }}
+            >
+                <Text>{'trigger SUBSCRIBE'}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                onPress={() => qualli.performTrigger('MESSAGE')}
+                style={{ marginTop: 20 }}
+            >
+                <Text>{'trigger MESSAGE'}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                onPress={() => qualli.performTrigger('LISTENED')}
+                style={{ marginTop: 20 }}
+            >
+                <Text>{'trigger LISTENED'}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                onPress={() => qualli.performTrigger('EXITED')}
+                style={{ marginTop: 20 }}
+            >
+                <Text>{'trigger EXITED'}</Text>
             </TouchableOpacity>
         </View>
     );
