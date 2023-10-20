@@ -8,14 +8,14 @@ interface Props {
     onClose: () => void;
 }
 
-import mainStyles from './../../survey.style';
+import mainStyles from '../../survey.style';
 
 const SurveyHeading = (props: Props) => {
     const { numberOfSlides, currentSlideIndex, colorScheme, onClose } = props;
 
     return (
         <View style={styles.container}>
-            <View style={styles.leftContainer}></View>
+            <View style={styles.leftContainer} />
 
             <TouchableOpacity
                 style={styles.closeIcon}

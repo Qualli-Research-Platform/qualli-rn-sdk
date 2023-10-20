@@ -1,16 +1,7 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { QualliProvider, useQualli } from '../../src/providers/QualliProvider';
-import {
-    SingleText,
-    SingleSelect,
-    Star,
-    NPS,
-    Numeric,
-    MultiSlide,
-    SimpleMultiSlideWithLogic,
-} from './test-surveys';
+import { QualliProvider, useQualli } from '@qualli/qualli-rn-sdk';
 
 const Home = () => {
     const qualli = useQualli();

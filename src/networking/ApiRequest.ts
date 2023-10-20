@@ -1,4 +1,4 @@
-import getDeviceMetaData from '../helpers/getDeviceMetaData';
+import getDeviceMetaData from './../helpers/getDeviceMetaData';
 
 interface Props {
     apiKey: string;
@@ -16,7 +16,7 @@ const ApiRequest = async (props: Props) => {
         const options = {
             method,
             headers: {
-                'Authorization': `Bearer ${apiKey}`,
+                Authorization: `Bearer ${apiKey}`,
                 'Content-Type': 'application/json',
                 ...headers,
             },

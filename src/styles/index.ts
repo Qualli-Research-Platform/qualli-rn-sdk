@@ -1,7 +1,7 @@
 import colors from './colors';
 
 const styles = {
-  colors,
+    colors,
 };
 
 export default styles;

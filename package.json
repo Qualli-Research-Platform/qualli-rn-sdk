@@ -1,6 +1,6 @@
 {
-    "name": "qualli-rn-sdk",
-    "version": "0.0.0-local.0",
+    "name": "@qualli/qualli-rn-sdk",
+    "version": "1.0.0",
     "description": "Qualli React Native SDK - Product Research on auto-pilot",
     "main": "lib/commonjs/index",
     "module": "lib/module/index",
@@ -27,9 +27,9 @@
     ],
     "scripts": {
         "example": "yarn workspace qualli-rn-sdk-example",
-        "test": "jest",
         "typecheck": "tsc --noEmit",
-        "lint": "eslint \"**/*.{js,ts,tsx}\"",
+        "lint": "eslint \"src/**/*.{js,ts,tsx}\"",
+        "lint:fix": "eslint \"src/**/*.{js,ts,tsx}\" --fix",
         "clean": "del-cli lib",
         "prepare": "bob build",
         "release": "release-it"
@@ -50,27 +50,38 @@
         "registry": "https://registry.npmjs.org/"
     },
     "devDependencies": {
+        "@babel/core": "^7.23.2",
+        "@babel/preset-env": "^7.23.2",
+        "@babel/runtime": "^7.23.2",
         "@commitlint/config-conventional": "^17.0.2",
         "@evilmartians/lefthook": "^1.5.0",
         "@react-native-async-storage/async-storage": "^1.19.3",
         "@react-native/eslint-config": "^0.72.2",
         "@release-it/conventional-changelog": "^5.0.0",
-        "@types/jest": "^28.1.2",
-        "@types/react": "~17.0.21",
+        "@tsconfig/react-native": "^3.0.2",
+        "@types/jest": "^29.5.6",
+        "@types/node": "^20.8.7",
         "@types/react-native": "0.70.0",
+        "@typescript-eslint/eslint-plugin": "^6.8.0",
+        "@typescript-eslint/parser": "^6.8.0",
+        "babel-eslint": "^10.1.0",
+        "babel-plugin-inline-dotenv": "^1.7.0",
+        "babel-plugin-module-resolver": "^5.0.0",
+        "babel-plugin-root-import": "^6.6.0",
         "commitlint": "^17.0.2",
         "del-cli": "^5.0.0",
-        "eslint": "^8.4.1",
-        "eslint-config-prettier": "^9.0.0",
-        "eslint-plugin-prettier": "^4.0.0",
-        "jest": "^28.1.1",
-        "prettier": "^3.0.3",
+        "eslint": "^8.51.0",
+        "eslint-plugin-jest": "^27.4.2",
+        "eslint-plugin-react": "^7.33.2",
+        "eslint-plugin-react-native": "^4.1.0",
+        "metro-react-native-babel-preset": "^0.77.0",
+        "prettier": "^2.4.1",
         "react": "18.2.0",
         "react-native": "0.72.5",
         "react-native-builder-bob": "^0.23.1",
         "react-native-device-info": "^10.11.0",
         "release-it": "^15.0.0",
-        "typescript": "^5.0.2"
+        "typescript": "^5.1.0"
     },
     "resolutions": {
         "@types/react": "17.0.21"
@@ -85,13 +96,6 @@
     "packageManager": "yarn@3.6.1",
     "engines": {
         "node": ">= 18.0.0"
-    },
-    "jest": {
-        "preset": "react-native",
-        "modulePathIgnorePatterns": [
-            "<rootDir>/example/node_modules",
-            "<rootDir>/lib/"
-        ]
     },
     "commitlint": {
         "extends": [
@@ -115,36 +119,10 @@
             }
         }
     },
-    "eslintConfig": {
-        "root": true,
-        "extends": [
-            "@react-native",
-            "prettier"
-        ],
-        "rules": {
-            "prettier/prettier": [
-                "error",
-                {
-                    "quoteProps": "consistent",
-                    "singleQuote": true,
-                    "tabWidth": 2,
-                    "trailingComma": "es5",
-                    "useTabs": false
-                }
-            ]
-        }
-    },
     "eslintIgnore": [
         "node_modules/",
         "lib/"
     ],
-    "prettier": {
-        "quoteProps": "consistent",
-        "singleQuote": true,
-        "tabWidth": 4,
-        "trailingComma": "es5",
-        "useTabs": false
-    },
     "react-native-builder-bob": {
         "source": "src",
         "output": "lib",

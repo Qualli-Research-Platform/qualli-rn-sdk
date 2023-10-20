@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { TouchableOpacity, Text, View } from 'react-native';
-import styles from './../../survey.style';
+import styles from '../../survey.style';
 
 interface Props {
     min: number;
@@ -18,7 +17,7 @@ const SurveySlideNumeric = (props: Props) => {
     const renderButton = (option: number, index: number) => {
         const isSelected = value === option;
 
-        let buttonStyles = [
+        const buttonStyles = [
             styles.form.numeric.button,
             colorScheme === 'dark' ? styles.form.numeric.buttonDark : null,
             colorScheme === 'dark' ? styles.form.numeric.buttonNPS : null,
@@ -29,7 +28,7 @@ const SurveySlideNumeric = (props: Props) => {
                 : null,
         ];
 
-        let labelStyles = [
+        const labelStyles = [
             styles.form.numeric.label,
             colorScheme === 'dark' ? styles.form.numeric.labelDark : null,
             isSelected
@@ -53,7 +52,7 @@ const SurveySlideNumeric = (props: Props) => {
         );
     };
 
-    let buttons = [];
+    const buttons = [];
     for (let i = min; i <= max; i++) {
         buttons.push(renderButton(i, i));
     }

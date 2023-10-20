@@ -1,8 +1,8 @@
-import { Platform, NativeModules } from 'react-native';
+import { Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 
 const getDeviceMetaData = async () => {
-    let metadata: {
+    const metadata: {
         app_version: string;
         os_version: string;
         manufacturer: string;

@@ -1,7 +1,7 @@
 const API_BASE_PATH =
     'https://4d6b-2a02-1810-c27-3800-75d5-ccc9-aaf6-a94a.ngrok-free.app/api/';
 
-import type { SurveyActions } from '../types/survey';
+import type { SurveyActions } from '../types';
 import apiRequest from './ApiRequest';
 
 const ApiManager = {
@@ -31,7 +31,7 @@ const ApiManager = {
     setUserAttributes: async (
         apiKey: string,
         userSessionKey: string,
-        attributes: any
+        attributes: any,
     ) => {
         if (Object.keys(attributes).length === 0) {
             console.log('QUALLI: No attributes to send');
@@ -63,7 +63,7 @@ const ApiManager = {
     performTrigger: async (
         apiKey: string,
         userSessionKey: string,
-        trigger: { name: string }
+        trigger: { name: string },
     ) => {
         if (!trigger?.name) {
             console.log('QUALLI: Invalid trigger');
@@ -103,7 +103,7 @@ const ApiManager = {
         userSessionKey: string,
         uniqueId: string,
         action: SurveyActions,
-        data: {}
+        data: {},
     ) => {
         const url = `${API_BASE_PATH}surveys/${uniqueId}/action`;
 
@@ -131,7 +131,7 @@ const ApiManager = {
     logEvent: async (
         apiKey: string,
         userSessionKey: string,
-        action: string
+        action: string,
     ) => {
         const url = `${API_BASE_PATH}app-user-events/store`;
 

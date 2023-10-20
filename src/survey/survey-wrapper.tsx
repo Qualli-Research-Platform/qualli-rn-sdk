@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
-import { SurveyType } from './../types';
-import { SurveyActions } from '../types/survey';
-import Survey from '../survey/survey';
+import { Survey as SurveyType, SurveyActions } from './../types/index';
+import Survey from './survey';
 
 interface SurveyComponentProps {
     logSurveyAction: (
         surveyUniqueId: any,
         action: SurveyActions,
-        data: any
+        data: any,
     ) => void;
     survey?: SurveyType;
 }
@@ -29,11 +28,10 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
 
     useEffect(() => {
         if (currentSurveyState.completed) {
-            console.log('SURVEY COMPLETED WITH: ', currentSurveyState.answers);
             logSurveyAction(
                 currentSurveyState.survey.unique_identifier,
                 SurveyActions.SURVEY_COMPLETED,
-                { answers: currentSurveyState.answers }
+                { answers: currentSurveyState.answers },
             );
             hideSurvey();
         }
@@ -54,7 +52,7 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
             currentSurveyState.survey &&
             !currentSurveyState.isVisible
         ) {
-            setCurrentSurveyState((prevState) => {
+            setCurrentSurveyState(prevState => {
                 return {
                     ...BASE_SURVEY_STATE,
                 };
@@ -63,14 +61,14 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
     }, [survey]);
 
     const saveAnswer = (slideId: string, value: any) => {
-        setCurrentSurveyState((prevState) => {
+        setCurrentSurveyState(prevState => {
             const newAnswers = { ...prevState.answers, [slideId]: value };
             return { ...prevState, answers: newAnswers };
         });
     };
 
     const showSurvey = (newSurvey: SurveyType) => {
-        setCurrentSurveyState((prevState) => {
+        setCurrentSurveyState(prevState => {
             return {
                 ...prevState,
                 survey: newSurvey,
@@ -80,12 +78,12 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
         logSurveyAction(
             newSurvey.unique_identifier,
             SurveyActions.SURVEY_SHOWN,
-            {}
+            {},
         );
     };
 
     const hideSurvey = () => {
-        setCurrentSurveyState((prevState) => {
+        setCurrentSurveyState(prevState => {
             return {
                 ...prevState,
                 isVisible: false,
@@ -93,7 +91,7 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
         });
 
         setTimeout(() => {
-            setCurrentSurveyState((prevState) => {
+            setCurrentSurveyState(prevState => {
                 return {
                     ...prevState,
                     survey: undefined,
@@ -106,7 +104,7 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
     };
 
     const onSurveyComplete = () => {
-        setCurrentSurveyState((prevState) => {
+        setCurrentSurveyState(prevState => {
             return {
                 ...prevState,
                 completed: true,
@@ -120,7 +118,7 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
         logSurveyAction(
             survey.unique_identifier,
             SurveyActions.SURVEY_SKIPPED,
-            { answers }
+            { answers },
         );
         hideSurvey();
     };

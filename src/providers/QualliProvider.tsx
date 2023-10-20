@@ -9,12 +9,11 @@ import React, {
 import { AppState } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import ApiManager from '../networking/ApiManager';
-import getDeviceMetaData from '../helpers/getDeviceMetaData';
+import ApiManager from './../networking/ApiManager';
+import getDeviceMetaData from './../helpers/getDeviceMetaData';
+import { SurveyActions } from './../types';
 
-import { SurveyActions } from '../types/survey';
-
-import SurveyWrapper from '../survey/survey-wrapper';
+import SurveyWrapper from './../survey/survey-wrapper';
 
 interface AuthState {
     authenticating: boolean;
@@ -54,12 +53,11 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
     useEffect(() => {
         const subscription = AppState.addEventListener(
             'change',
-            (nextAppState) => {
-                console.log(nextAppState);
+            nextAppState => {
                 appState.current = nextAppState;
 
                 saveAppState();
-            }
+            },
         );
 
         return () => {
@@ -80,13 +78,15 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
     }, [apiKey]);
 
     const identifyUser = async () => {
-        if (authState?.current?.authenticating) return;
+        if (authState?.current?.authenticating) {
+            return;
+        }
 
         // see if we have a app_user_key in localstorage first
         const userKey = await AsyncStorage.getItem('app_user_key');
         const response = await ApiManager.identify(
             apiKey,
-            userKey ? userKey : undefined
+            userKey ? userKey : undefined,
         );
         if (
             !response?.success ||
@@ -126,7 +126,7 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
         await ApiManager.logEvent(
             apiKey,
             authState.current.sessionKey as string,
-            appStateToAction[appState.current] as string
+            appStateToAction[appState.current] as string,
         );
     };
 
@@ -134,30 +134,29 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
         await ApiManager.setUserAttributes(
             apiKey,
             authState.current.sessionKey as string,
-            attributes
+            attributes,
         );
     };
 
     const logSurveyAction = async (
         surveyUniqueId: any,
         action: SurveyActions,
-        data: any
+        data: any,
     ) => {
         ApiManager.logSurveyAction(
             apiKey,
             authState.current.sessionKey,
             surveyUniqueId,
             action,
-            data
+            data,
         );
-        console.log(surveyUniqueId, action, data);
     };
 
     const performTrigger = async (trigger: string) => {
         const res = await ApiManager.performTrigger(
             apiKey,
             authState.current.sessionKey as string,
-            { name: trigger }
+            { name: trigger },
         );
 
         // if success -> see if we have any open surveys

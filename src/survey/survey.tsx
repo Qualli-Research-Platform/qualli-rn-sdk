@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     StyleSheet,
@@ -8,15 +7,12 @@ import {
     Keyboard,
 } from 'react-native';
 
-import { type Survey as SurveyType } from './../types';
-import { SlideType } from './../types';
-import type { Slide } from '../types/survey';
+import { type Survey as SurveyType, SlideType, Slide } from './../types';
 
+import DynamicHeightView from './../common/dynamicHeightView';
 import SurveyPanel from './base/panel/panel';
 import SurveySlide from './base/slide/slide';
 import SurveyHeading from './base/heading/heading';
-import DynamicHeightView from '../common/dynamicHeightView';
-import getNextSurveySlideBasedOnLogic from '../helpers/getNextSurveySlideBasedOnLogic';
 
 interface Props {
     ref: any;
@@ -69,7 +65,9 @@ const Survey = (props: Props) => {
     });
 
     useEffect(() => {
-        if (isVisible) setIsSurveyActive(true);
+        if (isVisible) {
+            setIsSurveyActive(true);
+        }
     }, [isVisible]);
 
     useEffect(() => {
@@ -81,8 +79,9 @@ const Survey = (props: Props) => {
     }, [isVisible]);
 
     useEffect(() => {
-        if (currentState.currentIndex > -1)
+        if (currentState.currentIndex > -1) {
             scrollViewScrollTo(scrollState?.current?.currentIndex);
+        }
     }, [currentState.currentIndex]);
 
     useEffect(() => {
@@ -133,22 +132,22 @@ const Survey = (props: Props) => {
                     <SurveySlide
                         slide={survey.slides[newIndex]}
                         colorScheme={colorScheme}
-                        onHeightLayout={(height) => {
+                        onHeightLayout={height => {
                             handleSlideHeightChange(
                                 height,
-                                survey.slides[newIndex]?.unique_identifier
+                                survey.slides[newIndex]?.unique_identifier,
                             );
                         }}
-                        onAnswerChange={(val) => {
+                        onAnswerChange={val => {
                             onSlideAnswerChange(
                                 survey.slides[newIndex]?.unique_identifier,
                                 val,
-                                survey.slides[newIndex]?.type
+                                survey.slides[newIndex]?.type,
                             );
                         }}
                         onNext={
                             SHOW_NEXT_TYPES.indexOf(
-                                survey.slides[newIndex]?.type
+                                survey.slides[newIndex]?.type,
                             ) > -1
                                 ? () => nextPress()
                                 : undefined
@@ -157,7 +156,7 @@ const Survey = (props: Props) => {
                             newIndex > 0 ? () => prevPress() : undefined
                         }
                     />
-                </ScrollView>
+                </ScrollView>,
             );
         }
 
@@ -176,7 +175,7 @@ const Survey = (props: Props) => {
     const onSlideAnswerChange = (
         slideId: string,
         value: any,
-        type: SlideType
+        type: SlideType,
     ) => {
         onAnswer(slideId, value);
 
@@ -222,7 +221,7 @@ const Survey = (props: Props) => {
                 ...scrollState?.current,
                 slides: scrollState?.current?.slides.slice(
                     0,
-                    scrollState?.current?.currentIndex + 1
+                    scrollState?.current?.currentIndex + 1,
                 ),
             };
             setCurrentState({
@@ -253,7 +252,7 @@ const Survey = (props: Props) => {
         newSlideHeights[slideId] = height > 0 ? height : 100;
         slideHeights.current = newSlideHeights;
 
-        setCurrentState((prevState) => ({
+        setCurrentState(prevState => ({
             ...prevState,
             slideHeights: newSlideHeights,
         }));

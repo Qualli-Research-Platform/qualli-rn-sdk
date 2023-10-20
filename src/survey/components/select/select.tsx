@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { TouchableOpacity, Text, ScrollView } from 'react-native';
-import styles from './../../survey.style';
+import styles from '../../survey.style';
 
 interface Props {
     options: { label: string }[];
@@ -27,7 +26,7 @@ const SurveySlideSelect = (props: Props) => {
 
                         if (isSelected) {
                             vals = values.filter(
-                                (val: string) => val !== option
+                                (val: string) => val !== option,
                             );
                         } else {
                             vals = [...values, option];

@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text } from 'react-native';
-import styles from './../../survey.style';
+import styles from '../../survey.style';
 
 interface Props {
     cta: string;
@@ -21,7 +21,7 @@ const Button = (props: Props) => {
         style,
     ];
 
-    let labelStyles = [
+    const labelStyles = [
         styles.base.button.label,
         colorScheme === 'light' ? styles.base.button.labelDark : null,
         underline ? styles.base.button.labelUnderline : null,

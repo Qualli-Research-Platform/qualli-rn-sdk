@@ -1,3 +1,24 @@
 {
-    "extends": ["prettier"]
+    "env": {},
+    "root": true,
+    "extends": "@react-native",
+    "rules": {
+        "no-await-in-loop": "error",
+        "no-console": ["error", { "allow": ["warn", "error"] }],
+        "eqeqeq": ["error", "always"],
+        "no-else-return": "error",
+        "comma-spacing": ["error", { "before": false, "after": true }],
+        "comma-dangle": ["error", "always-multiline"],
+        "no-unneeded-ternary": "error",
+        "prettier/prettier": ["error", { "singleQuote": true }],
+        "no-duplicate-imports": "error",
+        "no-var": "error",
+        "no-nested-ternary": "error",
+        "react-hooks/exhaustive-deps": "off"
+    },
+    "settings": {
+        "import/resolver": {
+            "babel-module": {}
+        }
+    }
 }

@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
-import { TouchableOpacity, Text, View, Image } from 'react-native';
-import styles from './../../survey.style';
+import React, { useState } from 'react';
+import { TouchableOpacity, View, Image } from 'react-native';
+import styles from '../../survey.style';
 
 interface Props {
     onChange: (val: number) => void;

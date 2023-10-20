@@ -14,7 +14,7 @@ const SurveyPanel = (props: Props) => {
 
     const [contentHeight, setContentHeight] = useState(0);
     const slideAnim = useRef(
-        new Animated.Value(Dimensions.get('screen').height)
+        new Animated.Value(Dimensions.get('screen').height),
     ).current;
 
     const handleLayout = (event: LayoutChangeEvent) => {

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Animated, ViewProps } from 'react-native';
+import { Animated, type ViewProps } from 'react-native';
 
 interface DynamicHeightViewProps extends ViewProps {
     height: number;
@@ -16,7 +16,9 @@ const DynamicHeightView: React.FC<DynamicHeightViewProps> = ({
     const heightAnim = useRef(new Animated.Value(height)).current;
 
     useEffect(() => {
-        if (height === undefined || height === null) return;
+        if (height === undefined || height === null) {
+            return;
+        }
 
         Animated.timing(heightAnim, {
             toValue: height,

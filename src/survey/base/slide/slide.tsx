@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
-import type { LayoutChangeEvent } from 'react-native';
+import {
+    View,
+    Text,
+    Image,
+    TouchableOpacity,
+    LayoutChangeEvent,
+} from 'react-native';
+
 import type {
     InputSlide,
     SelectSlide,
@@ -8,9 +14,8 @@ import type {
     StarSlide,
     NumericSlide,
     NPSSlide,
-    CSATSlide,
-} from '../../../types';
-import styles from './../../survey.style';
+} from './../../../types';
+import styles from '../../survey.style';
 
 import SurveySlideInput from '../../components/input/inputs';
 import SurveySlideSelect from '../../components/select/select';
@@ -25,8 +30,7 @@ interface Props {
         | MultipleChoiceSlide
         | StarSlide
         | NumericSlide
-        | NPSSlide
-        | CSATSlide;
+        | NPSSlide;
     colorScheme: 'light' | 'dark';
     onHeightLayout: (height: number) => void;
     onAnswerChange: (answer: any) => void;
@@ -51,7 +55,9 @@ const SurveySlide = (props: Props) => {
         onHeightLayout(contentHeight);
     }, [contentHeight]);
 
-    if (!slide) return null;
+    if (!slide) {
+        return null;
+    }
 
     const { title, subtitle, type } = slide;
 
@@ -109,12 +115,6 @@ const SurveySlide = (props: Props) => {
                         onChange={(val: number) => onAnswerChange(val)}
                     />
                 );
-            // case 'csat':
-            //     return (
-            //     <SurveySlideCSAT
-            //         onChange={(val: string) => console.log(val)}
-            //     />
-            //     );
         }
     };
 
@@ -148,7 +148,7 @@ const SurveySlide = (props: Props) => {
 
             {_showCTA && (
                 <View style={styles.slide.CTAContainer}>
-                    {!!onPrevious ? (
+                    {onPrevious ? (
                         <TouchableOpacity onPress={onPrevious}>
                             <Image
                                 style={[

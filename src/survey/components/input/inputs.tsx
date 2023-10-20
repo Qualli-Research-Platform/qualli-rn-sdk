@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TextInput } from 'react-native';
-import styles from './../../survey.style';
+import styles from '../../survey.style';
 
 interface Props {
     placeholder: string;
@@ -20,7 +19,7 @@ const SurveySlideInput = (props: Props) => {
 
     return (
         <TextInput
-            onChangeText={(val) => {
+            onChangeText={val => {
                 setValue(val);
             }}
             value={value}
@@ -36,7 +35,7 @@ const SurveySlideInput = (props: Props) => {
                     ? styles.form.input.placeholderDark
                     : styles.form.input.placeholder
             }
-        ></TextInput>
+        />
     );
 };
 

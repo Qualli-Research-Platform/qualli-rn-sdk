@@ -23,7 +23,8 @@
         "@babel/core": "^7.20.0",
         "@expo/webpack-config": "^18.0.1",
         "babel-loader": "^8.1.0",
-        "babel-plugin-module-resolver": "^5.0.0"
+        "babel-plugin-module-resolver": "^5.0.0",
+        "metro-react-native-babel-preset": "^0.77.0"
     },
     "private": true
 }
