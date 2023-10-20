@@ -90,7 +90,9 @@ const Survey = (props: Props) => {
     }, [currentState.completed]);
 
     const viewNextSlide = (newIndex: number) => {
-        if (!survey) return;
+        if (!survey) {
+            return;
+        }
 
         // did we reach the end?
         if (survey?.slides && newIndex > survey.slides.length - 1) {
