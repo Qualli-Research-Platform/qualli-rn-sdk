@@ -6,9 +6,10 @@ import React, {
     useContext,
     type ReactNode,
 } from 'react';
-import { AppState } from 'react-native';
+import { AppState, AppStateStatus } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import logger from './../helpers/logger';
 import ApiManager from './../networking/ApiManager';
 import getDeviceMetaData from './../helpers/getDeviceMetaData';
 import { SurveyActions } from './../types';
@@ -68,7 +69,7 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
     useEffect(() => {
         // try authenticating our user, else log the user key is invalid
         if (!apiKey) {
-            console.log('Qualli: Invalid API key provided');
+            logger('Qualli: Invalid API key provided');
         }
 
         if (apiKey) {
@@ -117,20 +118,24 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
     };
 
     const saveAppState = async () => {
-        const appStateToAction = {
+        const appStateToAction: { [index: string]: string } = {
             active: 'app_opened',
             inactive: 'app_closed',
             background: 'app_closed',
         };
 
-        await ApiManager.logEvent(
-            apiKey,
-            authState.current.sessionKey as string,
-            appStateToAction[appState.current] as string,
-        );
+        if (appStateToAction[appState.current as AppStateStatus]) {
+            await ApiManager.logEvent(
+                apiKey,
+                authState.current.sessionKey as string,
+                appStateToAction[appState.current as AppStateStatus],
+            );
+        }
     };
 
-    const setAttributes = async (attributes: {} = {}) => {
+    const setAttributes = async (
+        attributes: { [key: string]: string } = {},
+    ) => {
         await ApiManager.setUserAttributes(
             apiKey,
             authState.current.sessionKey as string,
@@ -145,7 +150,7 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
     ) => {
         ApiManager.logSurveyAction(
             apiKey,
-            authState.current.sessionKey,
+            authState.current.sessionKey as string,
             surveyUniqueId,
             action,
             data,

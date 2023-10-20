@@ -5,6 +5,7 @@ import {
     Image,
     TouchableOpacity,
     LayoutChangeEvent,
+    ViewStyle,
 } from 'react-native';
 
 import type {
@@ -70,7 +71,7 @@ const SurveySlide = (props: Props) => {
     };
 
     const renderSlideInputs = () => {
-        switch (slide.type) {
+        switch (type) {
             case 'input':
                 return (
                     <SurveySlideInput
@@ -147,7 +148,7 @@ const SurveySlide = (props: Props) => {
             <View style={{ padding: 16 }}>{renderSlideInputs()}</View>
 
             {_showCTA && (
-                <View style={styles.slide.CTAContainer}>
+                <View style={styles.slide.CTAContainer as ViewStyle}>
                     {onPrevious ? (
                         <TouchableOpacity onPress={onPrevious}>
                             <Image

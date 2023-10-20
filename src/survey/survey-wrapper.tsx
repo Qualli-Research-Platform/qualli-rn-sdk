@@ -22,14 +22,19 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
     survey,
     logSurveyAction,
 }) => {
-    const [currentSurveyState, setCurrentSurveyState] = useState({
+    const [currentSurveyState, setCurrentSurveyState] = useState<{
+        survey?: SurveyType;
+        answers: any;
+        isVisible: boolean;
+        completed: boolean;
+    }>({
         ...BASE_SURVEY_STATE,
     });
 
     useEffect(() => {
         if (currentSurveyState.completed) {
             logSurveyAction(
-                currentSurveyState.survey.unique_identifier,
+                currentSurveyState?.survey?.unique_identifier as string,
                 SurveyActions.SURVEY_COMPLETED,
                 { answers: currentSurveyState.answers },
             );
@@ -52,7 +57,7 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
             currentSurveyState.survey &&
             !currentSurveyState.isVisible
         ) {
-            setCurrentSurveyState(prevState => {
+            setCurrentSurveyState(_ => {
                 return {
                     ...BASE_SURVEY_STATE,
                 };
@@ -116,7 +121,7 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
         const { survey, answers } = currentSurveyState;
 
         logSurveyAction(
-            survey.unique_identifier,
+            survey?.unique_identifier as string,
             SurveyActions.SURVEY_SKIPPED,
             { answers },
         );

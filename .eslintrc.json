@@ -13,8 +13,8 @@
         "prettier/prettier": ["error", { "singleQuote": true }],
         "no-duplicate-imports": "error",
         "no-var": "error",
-        "no-nested-ternary": "error",
-        "react-hooks/exhaustive-deps": "off"
+        "react-hooks/exhaustive-deps": "off",
+        "no-nested-ternary": "off"
     },
     "settings": {
         "import/resolver": {

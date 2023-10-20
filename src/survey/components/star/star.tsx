@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, View, Image } from 'react-native';
+import { TouchableOpacity, View, Image, ViewStyle } from 'react-native';
 import styles from '../../survey.style';
 
 interface Props {
@@ -22,7 +22,7 @@ const SurveySlideStar = (props: Props) => {
                     setValue(option);
                     onChange(option);
                 }}
-                style={[styles.form.star.button]}
+                style={[styles.form.star.button as ViewStyle]}
             >
                 <Image
                     resizeMode="contain"
@@ -51,7 +51,7 @@ const SurveySlideStar = (props: Props) => {
         return renderButton(option, index);
     });
 
-    return <View style={styles.form.star.wrapper}>{buttons}</View>;
+    return <View style={styles.form.star.wrapper as ViewStyle}>{buttons}</View>;
 };
 
 export default SurveySlideStar;

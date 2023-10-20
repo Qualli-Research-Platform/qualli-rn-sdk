@@ -2,8 +2,6 @@ import React from 'react';
 import { TouchableOpacity, Image, StyleSheet, View } from 'react-native';
 
 interface Props {
-    numberOfSlides: number;
-    currentSlideIndex: number;
     colorScheme: 'light' | 'dark';
     onClose: () => void;
 }
@@ -11,7 +9,7 @@ interface Props {
 import mainStyles from '../../survey.style';
 
 const SurveyHeading = (props: Props) => {
-    const { numberOfSlides, currentSlideIndex, colorScheme, onClose } = props;
+    const { colorScheme, onClose } = props;
 
     return (
         <View style={styles.container}>
@@ -19,7 +17,7 @@ const SurveyHeading = (props: Props) => {
 
             <TouchableOpacity
                 style={styles.closeIcon}
-                onPress={props.onClose}
+                onPress={onClose}
                 hitSlop={20}
             >
                 <Image

@@ -1,6 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import type { LayoutChangeEvent } from 'react-native';
-import { Animated, StyleSheet, Dimensions } from 'react-native';
+import {
+    Animated,
+    StyleSheet,
+    Dimensions,
+    LayoutChangeEvent,
+} from 'react-native';
 
 interface Props {
     isVisible: boolean;
@@ -58,7 +62,6 @@ const SurveyPanel = (props: Props) => {
                     ],
                     backgroundColor,
                 },
-                ,
             ]}
             onLayout={handleLayout}
         >

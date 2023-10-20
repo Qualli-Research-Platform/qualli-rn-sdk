@@ -3,6 +3,7 @@ const API_BASE_PATH =
 
 import type { SurveyActions } from '../types';
 import apiRequest from './ApiRequest';
+import logger from './../helpers/logger';
 
 const ApiManager = {
     identify: async (apiKey: string, userKey?: string) => {
@@ -17,11 +18,10 @@ const ApiManager = {
             });
 
             if (jsonResponse.success) {
-                console.log('QUALLI: identify ', jsonResponse);
+                logger('QUALLI: identify ', jsonResponse);
                 return jsonResponse;
-            } else {
-                console.error('QUALLI: Failed to identify user');
             }
+            console.error('QUALLI: Failed to identify user');
         } catch (error) {
             console.error('QUALLI: Failed to identify user: ', error);
             return { success: false };
@@ -34,7 +34,7 @@ const ApiManager = {
         attributes: any,
     ) => {
         if (Object.keys(attributes).length === 0) {
-            console.log('QUALLI: No attributes to send');
+            logger('QUALLI: No attributes to send');
             return;
         }
 
@@ -54,7 +54,7 @@ const ApiManager = {
                 headers,
                 body: { attributes, timestamp: new Date() },
             });
-            console.log('QUALLI: Successfully set user attributes');
+            logger('QUALLI: Successfully set user attributes');
         } catch (error) {
             console.error('QUALLI: Error setting user attributes: ', error);
         }
@@ -66,7 +66,7 @@ const ApiManager = {
         trigger: { name: string },
     ) => {
         if (!trigger?.name) {
-            console.log('QUALLI: Invalid trigger');
+            logger('QUALLI: Invalid trigger');
             return;
         }
 
@@ -88,11 +88,10 @@ const ApiManager = {
             });
 
             if (jsonResponse.success) {
-                console.log('QUALLI: Successfully performed trigger');
+                logger('QUALLI: Successfully performed trigger');
                 return jsonResponse;
-            } else {
-                console.error('QUALLI: Error performing trigger');
             }
+            console.error('QUALLI: Error performing trigger');
         } catch (error) {
             console.error('QUALLI: Error performing trigger: ', error);
         }
@@ -121,9 +120,9 @@ const ApiManager = {
                 headers,
                 body: { action, data, timestamp: new Date() },
             });
-            console.log('QUALLI: Successfully logged the survey action');
-        } catch (error) {
-            console.log(error.response);
+            logger('QUALLI: Successfully logged the survey action');
+        } catch (error: any) {
+            logger(error?.response || '');
             console.error('QUALLI: Error logging the survey action: ', error);
         }
     },
@@ -149,9 +148,9 @@ const ApiManager = {
                 headers,
                 body: { action, event_name: action, timestamp: new Date() },
             });
-            console.log('QUALLI: Successfully logged the action');
-        } catch (error) {
-            console.log(error.response);
+            logger('QUALLI: Successfully logged the action');
+        } catch (error: any) {
+            logger(error?.response || '');
             console.error('QUALLI: Error logging the action: ', error);
         }
     },

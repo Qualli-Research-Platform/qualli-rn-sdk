@@ -15,7 +15,6 @@ import SurveySlide from './base/slide/slide';
 import SurveyHeading from './base/heading/heading';
 
 interface Props {
-    ref: any;
     survey?: SurveyType;
     isVisible?: boolean;
     answers: { [key: string]: any };
@@ -49,8 +48,8 @@ const Survey = (props: Props) => {
     });
     const [isNew, setIsNew] = useState(true);
     const [isSurveyActive, setIsSurveyActive] = useState(false);
-    const slideHeights = React.useRef<{}>({});
-    const slidesScrollRef = React.useRef(null);
+    const slideHeights = React.useRef<any>({});
+    const slidesScrollRef = React.useRef<ScrollView>(null);
     const localAnswers = React.useRef({});
     const scrollState = React.useRef<{
         slides: JSX.Element[];
@@ -91,28 +90,15 @@ const Survey = (props: Props) => {
     }, [currentState.completed]);
 
     const viewNextSlide = (newIndex: number) => {
-        // if we went forward in our index -> add in the next slide
-        // if we went back in our index -> keep the last slide for now
+        if (!survey) return;
 
         // did we reach the end?
-        if (newIndex > survey.slides.length - 1) {
+        if (survey?.slides && newIndex > survey.slides.length - 1) {
             setCurrentState({ ...currentState, completed: true });
             return;
         }
 
         const slides = [...scrollState.current.slides];
-
-        // first get the current slide
-        // const currentSlide = scrollState?.current?.currentSlide;
-
-        // does this slide have logic? TODO
-        // if (currentSlide?.logic) {
-        //     getNextSurveySlideBasedOnLogic(
-        //         survey,
-        //         currentSlide,
-        //         localAnswers.current
-        //     );
-        // }
 
         // only when going forward
         if (
@@ -247,8 +233,8 @@ const Survey = (props: Props) => {
         viewNextSlide(scrollState?.current?.currentIndex - 1);
     };
 
-    const handleSlideHeightChange = (height: number, slideId: number) => {
-        const newSlideHeights = { ...slideHeights.current };
+    const handleSlideHeightChange = (height: number, slideId: string) => {
+        const newSlideHeights: any = { ...slideHeights.current };
         newSlideHeights[slideId] = height > 0 ? height : 100;
         slideHeights.current = newSlideHeights;
 
@@ -272,8 +258,6 @@ const Survey = (props: Props) => {
                 <SurveyHeading
                     colorScheme={colorScheme}
                     onClose={onAbortSurvey}
-                    numberOfSlides={survey?.slides?.length || 1}
-                    currentSlideIndex={1}
                 />
             </View>
 

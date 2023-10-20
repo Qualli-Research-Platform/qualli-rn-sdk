@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, Text, View } from 'react-native';
+import { TouchableOpacity, Text, View, ViewStyle } from 'react-native';
 import styles from '../../survey.style';
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 const SurveySlideNumeric = (props: Props) => {
     const { onChange, colorScheme, min, max } = props;
 
-    const [value, setValue] = useState<number>(null);
+    const [value, setValue] = useState<number | null>(null);
 
     const renderButton = (option: number, index: number) => {
         const isSelected = value === option;
@@ -57,7 +57,9 @@ const SurveySlideNumeric = (props: Props) => {
         buttons.push(renderButton(i, i));
     }
 
-    return <View style={styles.form.numeric.wrapper}>{buttons}</View>;
+    return (
+        <View style={styles.form.numeric.wrapper as ViewStyle}>{buttons}</View>
+    );
 };
 
 export default SurveySlideNumeric;
