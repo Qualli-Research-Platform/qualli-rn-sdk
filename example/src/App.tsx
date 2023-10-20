@@ -17,9 +17,18 @@ const Home = () => {
 
     return (
         <View style={styles.container}>
-            {/* <TouchableOpacity onPress={showSurvey}>
-                <Text>{'toggle panel'}</Text>
-            </TouchableOpacity> */}
+            <TouchableOpacity
+                onPress={() => {
+                    qualli.setAttributes({
+                        email: 'nick@testing.com',
+                        first_name: 'Nick',
+                        last_name: 'Smet',
+                        testShizzle: 'test',
+                    });
+                }}
+            >
+                <Text>{'set some user attributes'}</Text>
+            </TouchableOpacity>
 
             <TouchableOpacity
                 onPress={() => qualli.performTrigger('SUBSCRIBE')}

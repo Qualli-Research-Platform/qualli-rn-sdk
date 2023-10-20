@@ -113,7 +113,6 @@ const ApiManager = {
         }
         const headers = { 'user-session-key': userSessionKey };
 
-        console.log({ action, data, timestamp: new Date() });
         try {
             await apiRequest({
                 apiKey,
@@ -126,6 +125,34 @@ const ApiManager = {
         } catch (error) {
             console.log(error.response);
             console.error('QUALLI: Error logging the survey action: ', error);
+        }
+    },
+
+    logEvent: async (
+        apiKey: string,
+        userSessionKey: string,
+        action: string
+    ) => {
+        const url = `${API_BASE_PATH}app-user-events/store`;
+
+        if (!userSessionKey) {
+            console.error('QUALLI: No session ID available');
+            return;
+        }
+        const headers = { 'user-session-key': userSessionKey };
+
+        try {
+            await apiRequest({
+                apiKey,
+                url,
+                method: 'POST',
+                headers,
+                body: { action, event_name: action, timestamp: new Date() },
+            });
+            console.log('QUALLI: Successfully logged the action');
+        } catch (error) {
+            console.log(error.response);
+            console.error('QUALLI: Error logging the action: ', error);
         }
     },
 };

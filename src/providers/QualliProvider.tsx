@@ -16,12 +16,16 @@ import { SurveyActions } from '../types/survey';
 
 import SurveyWrapper from '../survey/survey-wrapper';
 
-// Define the shape of your context
+interface AuthState {
+    authenticating: boolean;
+    sessionKey: string | null;
+    userKey: string | null;
+}
+
 interface QualliContextProps {
-    user: any; // Define your user type
-    login: (username: string, password: string) => void;
-    logout: () => void;
+    authState: any;
     performTrigger: (trigger: string) => void;
+    setAttributes: (attributes: {}) => void;
 }
 
 interface QualliProviderProps {
@@ -35,17 +39,10 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
     children,
     apiKey,
 }) => {
-    const [authenticated, setAuthenticated] = useState(false);
-    const [user, setUser] = useState(null); // Or your initial user state
-
-    const authState = useRef<{
-        authenticating: boolean;
-        sessionKey?: string;
-        userKey?: string;
-    }>({
+    const authState = useRef<AuthState>({
         authenticating: false,
-        sessionKey: undefined,
-        userKey: undefined,
+        sessionKey: null,
+        userKey: null,
     });
 
     const [surveyState, setSurveyState] = useState({
@@ -58,16 +55,10 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
         const subscription = AppState.addEventListener(
             'change',
             (nextAppState) => {
-                if (
-                    appState.current.match(/inactive|background/) &&
-                    nextAppState === 'active'
-                ) {
-                    console.log('App has come to the foreground!');
-                }
-
+                console.log(nextAppState);
                 appState.current = nextAppState;
 
-                console.log('AppState', appState.current);
+                saveAppState();
             }
         );
 
@@ -115,24 +106,36 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
             sessionKey: response.session_key,
             userKey: response.app_user_key,
         };
-        setAuthenticated(true);
 
         // in the background set the users latest attributes
-        updateUserBaseAttributes();
+        setDefaultUserAttributes();
     };
 
-    const updateUserBaseAttributes = async () => {
+    const setDefaultUserAttributes = async () => {
         const baseAttributes = await getDeviceMetaData();
+        setAttributes(baseAttributes);
+    };
 
-        await ApiManager.setUserAttributes(
+    const saveAppState = async () => {
+        const appStateToAction = {
+            active: 'app_opened',
+            inactive: 'app_closed',
+            background: 'app_closed',
+        };
+
+        await ApiManager.logEvent(
             apiKey,
-            authState.current.sessionKey,
-            baseAttributes
+            authState.current.sessionKey as string,
+            appStateToAction[appState.current] as string
         );
     };
 
-    const logEvent = (event: string, payload: {}) => {
-        // Implement logout logic with API
+    const setAttributes = async (attributes: {} = {}) => {
+        await ApiManager.setUserAttributes(
+            apiKey,
+            authState.current.sessionKey as string,
+            attributes
+        );
     };
 
     const logSurveyAction = async (
@@ -153,7 +156,7 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
     const performTrigger = async (trigger: string) => {
         const res = await ApiManager.performTrigger(
             apiKey,
-            authState.current.sessionKey,
+            authState.current.sessionKey as string,
             { name: trigger }
         );
 
@@ -171,7 +174,13 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
     };
 
     return (
-        <QualliContext.Provider value={{ user, performTrigger }}>
+        <QualliContext.Provider
+            value={{
+                authState: authState?.current,
+                performTrigger,
+                setAttributes,
+            }}
+        >
             {children}
             <SurveyWrapper
                 survey={surveyState?.survey}

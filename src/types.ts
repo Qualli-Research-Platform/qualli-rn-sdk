@@ -6,7 +6,7 @@ export type {
     StarSlide,
     NumericSlide,
     NPSSlide,
-    CSATSlide,
+    // CSATSlide,
 } from './types/survey';
 
 export { SlideType } from './types/survey';
