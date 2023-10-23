@@ -145,7 +145,9 @@ const SurveySlide = (props: Props) => {
                 )}
             </View>
 
-            <View style={{ padding: 16 }}>{renderSlideInputs()}</View>
+            <View style={{ padding: 16, paddingTop: 8 }}>
+                {renderSlideInputs()}
+            </View>
 
             {_showCTA && (
                 <View style={styles.slide.CTAContainer as ViewStyle}>

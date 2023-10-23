@@ -1,35 +1,101 @@
-# qualli-rn-sdk
+# Qualli RN SDK
 
-Qualli React Native SDK - Product Research on auto-pilot
+Welcome to the Qualli RN SDK! This SDK allows you to effortlessly integrate Qualli's core functionalities into your React Native app. This guide will walk you through the key steps to integrate and use our SDK.
+
+## Table of Contents
+
+-   [Qualli RN SDK](#qualli-rn-sdk)
+    -   [Table of Contents](#table-of-contents)
+    -   [Installation](#installation)
+    -   [Setup](#setup)
+        -   [Adding the Provider](#adding-the-provider)
+        -   [Setting Up a Valid Key](#setting-up-a-valid-key)
+        -   [Setting up Triggers](#setting-up-triggers)
+        -   [Setting Custom Attributes](#setting-custom-attributes)
+    -   [Reserved Triggers](#reserved-triggers)
+    -   [Contribution](#contribution)
 
 ## Installation
 
-```sh
-npm install qualli-rn-sdk
+```bash
+npm install @qualli/qualli-rn-sdk
 ```
 
-## Usage
+or
 
-```js
-import { multiply } from 'qualli-rn-sdk';
-
-// ...
-
-const result = await multiply(3, 7);
+```bash
+yarn add @qualli/qualli-rn-sdk
 ```
 
-## Contributing
+## Setup
 
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
+### Adding the Provider
 
-### Development
+Wrap your main app component with the `QualliProvider` component to make the Qualli functions available throughout your app:
 
-in /example `npx expo start --dev-client`
+```javascript
+import { QualliProvider } from '@qualli/qualli-rn-sdk';
 
-## License
+function App() {
+    return <QualliProvider>{/* Other components */}</QualliProvider>;
+}
+```
 
-MIT
+### Setting Up a Valid Key
+
+To use Qualli's features, you need to initialize the provider with your API key:
+
+```javascript
+<QualliProvider apiKey="YOUR_API_KEY_HERE">
+    {/* Other components */}
+</QualliProvider>
+```
+
+Replace `YOUR_API_KEY_HERE` with your actual Qualli API key.
+
+### Setting up Triggers
+
+Using the `useQualli` hook, you can invoke the `performTrigger` function:
+
+```javascript
+const qualli = useQualli();
+
+qualli.performTrigger('YOUR_TRIGGER_NAME');
+```
+
+Replace `'YOUR_TRIGGER_NAME'` with the name of the trigger you want to activate.
+
+### Setting Custom Attributes
+
+Custom attributes can be set for the user using the `setAttributes` function. Here's an example:
+
+```javascript
+const qualli = useQualli();
+
+qualli.setAttributes({
+    email: 'email@example.com',
+    first_name: 'John',
+    last_name: 'Doe',
+    customAttribute: 'customValue',
+});
+```
+
+## Reserved Triggers
+
+The following triggers are reserved by the SDK and should not be used as custom trigger names:
+
+-   `app_user_identified`
+-   `app_user_created`
+-   `session_started`
+-   `session_ended`
+-   `app_opened`
+-   `app_closed`
+-   `app_backgrounded`
+
+## Contribution
+
+We appreciate your contribution to the Qualli RN SDK. If you find any issues or have suggestions, please open an issue or submit a pull request.
 
 ---
 
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
+Happy coding with Qualli RN SDK! 🚀
