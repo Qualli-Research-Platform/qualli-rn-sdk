@@ -1,6 +1,4 @@
-const API_BASE_PATH = __DEV__
-    ? 'https://4d6b-2a02-1810-c27-3800-75d5-ccc9-aaf6-a94a.ngrok-free.app/api/'
-    : 'https://api.usequalli.com/api/';
+const API_BASE_PATH = 'https://api.usequalli.com/api/';
 
 import type { SurveyActions } from '../types';
 import apiRequest from './ApiRequest';
