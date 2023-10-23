@@ -10,7 +10,6 @@ import {
 
 import type {
     InputSlide,
-    SelectSlide,
     MultipleChoiceSlide,
     StarSlide,
     NumericSlide,
@@ -27,7 +26,6 @@ import Button from '../../components/button/button';
 interface Props {
     slide:
         | InputSlide
-        | SelectSlide
         | MultipleChoiceSlide
         | StarSlide
         | NumericSlide
@@ -81,7 +79,6 @@ const SurveySlide = (props: Props) => {
                         multiline={!!slide?.multiline}
                     />
                 );
-            case 'select':
             case 'multiplechoice':
                 return (
                     <SurveySlideSelect
