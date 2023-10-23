@@ -1,5 +1,6 @@
-
 {
-  "extends": "./tsconfig",
-  "exclude": ["example"]
+    "extends": "./tsconfig",
+    "compilerOptions": {
+        "noEmit": false
+    }
 }
