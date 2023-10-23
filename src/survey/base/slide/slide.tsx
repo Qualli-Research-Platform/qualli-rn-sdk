@@ -14,6 +14,7 @@ import type {
     StarSlide,
     NumericSlide,
     NPSSlide,
+    SelectSlide,
 } from './../../../types';
 import styles from '../../survey.style';
 
@@ -27,6 +28,7 @@ interface Props {
     slide:
         | InputSlide
         | MultipleChoiceSlide
+        | SelectSlide
         | StarSlide
         | NumericSlide
         | NPSSlide;
@@ -79,6 +81,7 @@ const SurveySlide = (props: Props) => {
                         multiline={!!slide?.multiline}
                     />
                 );
+            case 'select':
             case 'multiplechoice':
                 return (
                     <SurveySlideSelect
