@@ -84,8 +84,7 @@ function App() {
 
 ### Setting Up Triggers
 
-The following triggers are _reserved for Qualli, and can't be used._
-Qualli RN SDK provides reserved triggers that your application can use:
+⚠️ The following triggers are reserved for Qualli, and can't be used:
 
 -   `app_user_identified`
 -   `app_user_created`
@@ -104,7 +103,19 @@ qualli.performTrigger('TRIGGER_NAME');
 
 ### Setting Custom Attributes
 
+You have the ability to store your own custom attributes on User level. e.g. you want to add their email, or a custom identifier.
+
 To store user-specific attributes, leverage the `setAttributes` function:
+
+Accepted value types:
+
+-   String
+-   Number
+
+The following attributes are provided on root user level:
+
+-   email
+-   name
 
 ```jsx
 const qualli = useQualli();

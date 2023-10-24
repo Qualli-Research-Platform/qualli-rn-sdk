@@ -15,7 +15,6 @@ import {
     type StarSlide,
     type NumericSlide,
     type NPSSlide,
-    type SelectSlide,
     SlideType,
     TextSlide,
 } from './../../../types';
@@ -31,7 +30,6 @@ interface Props {
     slide:
         | InputSlide
         | MultipleChoiceSlide
-        | SelectSlide
         | StarSlide
         | NumericSlide
         | NPSSlide

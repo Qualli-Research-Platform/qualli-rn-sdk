@@ -134,7 +134,7 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
     };
 
     const setAttributes = async (
-        attributes: { [key: string]: string } = {},
+        attributes: { [key: string]: string | number } = {},
     ) => {
         await ApiManager.setUserAttributes(
             apiKey,
