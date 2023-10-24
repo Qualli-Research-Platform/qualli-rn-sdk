@@ -26,13 +26,14 @@ interface Props {
 const SHOW_NEXT_TYPES: SlideType[] = [
     SlideType.input,
     SlideType.multiplechoice,
+    SlideType.text,
 ];
 
 const DIRECT_ANWER_TYPES: SlideType[] = [
     SlideType.star,
-    SlideType.select,
     SlideType.nps,
     SlideType.numeric,
+    SlideType.text,
     // SlideType.csat,
 ];
 

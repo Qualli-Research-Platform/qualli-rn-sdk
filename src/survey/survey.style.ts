@@ -18,6 +18,9 @@ const survey = {
         titleDark: {
             color: DARK_COLOR,
         },
+        titleCentered: {
+            textAlign: 'center',
+        },
         subtitle: {
             fontSize: 14,
             color: LIGHT_COLOR,
@@ -25,13 +28,16 @@ const survey = {
         subtitleDark: {
             color: DARK_COLOR,
         },
+        subtitleCentered: {
+            textAlign: 'center',
+        },
         headerContainer: {
             padding: 16,
         },
         button: {
             full: {
                 borderRadius: 14,
-                paddingVertical: 8,
+                paddingVertical: 12,
                 paddingHorizontal: 24,
                 backgroundColor: LIGHT_COLOR,
             },
@@ -51,7 +57,6 @@ const survey = {
             label: {
                 fontWeight: 500,
                 fontSize: 16,
-                textTransform: 'capitalize',
                 color: LIGHT_COLOR,
             },
             labelDark: {
@@ -73,6 +78,12 @@ const survey = {
             justifyContent: 'space-between',
             alignItems: 'center',
             flexDirection: 'row',
+            width: '100%',
+        },
+        CTAContainerText: {
+            // padding: 16,
+            justifyContent: 'center',
+            alignItems: 'center',
             width: '100%',
         },
         previousButton: {

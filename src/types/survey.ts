@@ -2,11 +2,11 @@ export interface Survey {
     unique_identifier: string;
     slides: Array<
         | InputSlide
-        | SelectSlide
         | MultipleChoiceSlide
         | StarSlide
         | NumericSlide
         | NPSSlide
+        | TextSlide
         // | CSATSlide
     >;
     person?: Person;
@@ -18,12 +18,6 @@ export interface InputSlide extends Slide {
     type: SlideType.input;
     placeholder: string;
     multiline?: boolean;
-}
-
-export interface SelectSlide extends Slide {
-    type: SlideType.select;
-    multiple: false;
-    options: { label: string }[];
 }
 
 export interface MultipleChoiceSlide extends Slide {
@@ -42,6 +36,10 @@ export interface NumericSlide extends Slide {
     max: number;
 }
 
+export interface TextSlide extends Slide {
+    type: SlideType.text;
+}
+
 export interface NPSSlide extends Slide {
     type: SlideType.nps;
 }
@@ -56,6 +54,7 @@ export interface Slide {
     title: string;
     subtitle?: string;
     type: SlideType;
+    button_label?: string;
 }
 
 interface Style {
@@ -72,11 +71,11 @@ interface Person {
 
 export enum SlideType {
     'input' = 'input',
-    'select' = 'select',
     'multiplechoice' = 'multiplechoice',
     'star' = 'star',
     'numeric' = 'numeric',
     'nps' = 'nps',
+    'text' = 'text',
     // 'csat' = 'csat',
 }
 

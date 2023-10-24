@@ -11,10 +11,9 @@ const Home = () => {
             <TouchableOpacity
                 onPress={() => {
                     qualli.setAttributes({
-                        email: 'nick@testing.com',
-                        first_name: 'Nick',
-                        last_name: 'Smet',
-                        testShizzle: 'test',
+                        email: 'john@doe.com',
+                        first_name: 'John',
+                        last_name: 'Doe',
                     });
                 }}
             >

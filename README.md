@@ -35,7 +35,6 @@ Our SDK relies on two essential dependency packages:
 
 -   `@react-native-async-storage/async-storage` - Used for storing local keys that identify the user.
 -   `react-native-device-info` - Helps in adding metadata to your users and events.
--
 
 ### Install Dependencies
 

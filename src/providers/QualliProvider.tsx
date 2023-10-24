@@ -25,7 +25,7 @@ interface AuthState {
 interface QualliContextProps {
     authState: any;
     performTrigger: (trigger: string) => void;
-    setAttributes: (attributes: {}) => void;
+    setAttributes: (attributes: { [key: string]: string | number }) => void;
 }
 
 interface QualliProviderProps {

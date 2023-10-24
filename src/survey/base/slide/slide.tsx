@@ -6,15 +6,18 @@ import {
     TouchableOpacity,
     LayoutChangeEvent,
     ViewStyle,
+    TextStyle,
 } from 'react-native';
 
-import type {
-    InputSlide,
-    MultipleChoiceSlide,
-    StarSlide,
-    NumericSlide,
-    NPSSlide,
-    SelectSlide,
+import {
+    type InputSlide,
+    type MultipleChoiceSlide,
+    type StarSlide,
+    type NumericSlide,
+    type NPSSlide,
+    type SelectSlide,
+    SlideType,
+    TextSlide,
 } from './../../../types';
 import styles from '../../survey.style';
 
@@ -31,7 +34,8 @@ interface Props {
         | SelectSlide
         | StarSlide
         | NumericSlide
-        | NPSSlide;
+        | NPSSlide
+        | TextSlide;
     colorScheme: 'light' | 'dark';
     onHeightLayout: (height: number) => void;
     onAnswerChange: (answer: any) => void;
@@ -81,7 +85,6 @@ const SurveySlide = (props: Props) => {
                         multiline={!!slide?.multiline}
                     />
                 );
-            case 'select':
             case 'multiplechoice':
                 return (
                     <SurveySlideSelect
@@ -128,6 +131,8 @@ const SurveySlide = (props: Props) => {
                     style={[
                         styles.base.title,
                         colorScheme === 'dark' && styles.base.titleDark,
+                        type === SlideType.text &&
+                            (styles.base.titleCentered as TextStyle),
                     ]}
                 >
                     {title}
@@ -138,6 +143,8 @@ const SurveySlide = (props: Props) => {
                         style={[
                             styles.base.subtitle,
                             colorScheme === 'dark' && styles.base.subtitleDark,
+                            type === SlideType.text &&
+                                (styles.base.subtitleCentered as TextStyle),
                         ]}
                     >
                         {subtitle}
@@ -148,6 +155,17 @@ const SurveySlide = (props: Props) => {
             <View style={{ padding: 16, paddingTop: 8 }}>
                 {renderSlideInputs()}
             </View>
+
+            {!!onNext && type === SlideType.text && (
+                <View style={styles.slide.CTAContainerText as ViewStyle}>
+                    <Button
+                        onClick={onNext}
+                        disabled={false}
+                        colorScheme={colorScheme}
+                        cta={slide.button_label || 'Next'}
+                    />
+                </View>
+            )}
 
             {_showCTA && (
                 <View style={styles.slide.CTAContainer as ViewStyle}>
@@ -166,12 +184,12 @@ const SurveySlide = (props: Props) => {
                         <View />
                     )}
 
-                    {!!onNext && (
+                    {!!onNext && type !== SlideType.text && (
                         <Button
                             onClick={onNext}
                             disabled={false}
                             colorScheme={colorScheme}
-                            cta="Next"
+                            cta={slide.button_label || 'Next'}
                         />
                     )}
                 </View>

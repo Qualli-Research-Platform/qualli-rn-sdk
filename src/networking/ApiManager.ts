@@ -1,4 +1,5 @@
-const API_BASE_PATH = 'https://api.usequalli.com/api/';
+// const API_BASE_PATH = 'https://api.usequalli.com/api/';
+const API_BASE_PATH = 'http://localhost:8080/api/';
 
 import type { SurveyActions } from '../types';
 import apiRequest from './ApiRequest';
