@@ -84,6 +84,7 @@ function App() {
 
 ### Setting Up Triggers
 
+The following triggers are _reserved for Qualli, and can't be used._
 Qualli RN SDK provides reserved triggers that your application can use:
 
 -   `app_user_identified`
