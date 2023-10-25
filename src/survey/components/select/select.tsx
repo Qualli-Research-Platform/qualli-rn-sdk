@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, Text, ScrollView } from 'react-native';
+import {
+    TouchableOpacity,
+    Text,
+    ScrollView,
+    Image,
+    View,
+    ViewStyle,
+    TextStyle,
+} from 'react-native';
+import { SurveyTheme } from './../../../types';
 import styles from '../../survey.style';
 
 interface Props {
     options: { label: string }[];
     onChange: (val: string[]) => void;
     multiple: boolean;
-    colorScheme: 'light' | 'dark';
+    theme: SurveyTheme;
 }
 
 const SurveySlideSelect = (props: Props) => {
-    const { options, onChange, multiple, colorScheme } = props;
+    const { options, onChange, multiple, theme } = props;
 
     const [values, setValues] = useState<string[]>([]);
 
@@ -39,33 +48,42 @@ const SurveySlideSelect = (props: Props) => {
                     }
                 }}
                 style={[
-                    styles.form.select.button,
+                    styles.form.select.button as ViewStyle,
                     index > 0 && { marginTop: 12 },
-                    colorScheme === 'dark'
-                        ? styles.form.select.buttonDark
-                        : null,
-                    isSelected
-                        ? colorScheme === 'dark'
-                            ? styles.form.select.buttonDarkSelected
-                            : styles.form.select.buttonSelected
-                        : null,
+                    {
+                        backgroundColor: theme.answer_color + '10',
+                        borderColor: theme.answer_color,
+                    },
                 ]}
             >
-                <Text
-                    style={[
-                        styles.form.select.label,
-                        colorScheme === 'dark'
-                            ? styles.form.select.labelDark
-                            : null,
-                        isSelected
-                            ? colorScheme === 'dark'
-                                ? styles.form.select.labelDarkSelected
-                                : styles.form.select.labelSelected
-                            : null,
-                    ]}
-                >
-                    {option}
-                </Text>
+                {isSelected && (
+                    <View
+                        style={[
+                            styles.form.select.borderCollapse as ViewStyle,
+                            { borderColor: theme.answer_color },
+                        ]}
+                    />
+                )}
+                <View style={styles.form.select.labelWrapper as ViewStyle}>
+                    <Text
+                        style={
+                            [
+                                styles.form.select.label,
+                                { color: theme.answer_color },
+                            ] as TextStyle
+                        }
+                    >
+                        {option}
+                    </Text>
+                    {isSelected && (
+                        <Image
+                            source={require('../../../assets/icons/check.png')}
+                            style={styles.form.select.icon}
+                            tintColor={theme.answer_color}
+                            resizeMode="contain"
+                        />
+                    )}
+                </View>
             </TouchableOpacity>
         );
     };
@@ -77,7 +95,7 @@ const SurveySlideSelect = (props: Props) => {
     return (
         <ScrollView
             showsVerticalScrollIndicator={false}
-            style={{ maxHeight: 400 }}
+            style={{ maxHeight: 300 }}
         >
             {buttons}
         </ScrollView>

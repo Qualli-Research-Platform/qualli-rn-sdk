@@ -17,6 +17,7 @@ import {
     type NPSSlide,
     SlideType,
     TextSlide,
+    SurveyTheme,
 } from './../../../types';
 import styles from '../../survey.style';
 
@@ -34,7 +35,7 @@ interface Props {
         | NumericSlide
         | NPSSlide
         | TextSlide;
-    colorScheme: 'light' | 'dark';
+    theme: SurveyTheme;
     onHeightLayout: (height: number) => void;
     onAnswerChange: (answer: any) => void;
     onPrevious?: () => void;
@@ -42,14 +43,8 @@ interface Props {
 }
 
 const SurveySlide = (props: Props) => {
-    const {
-        slide,
-        colorScheme,
-        onHeightLayout,
-        onAnswerChange,
-        onPrevious,
-        onNext,
-    } = props;
+    const { slide, theme, onHeightLayout, onAnswerChange, onPrevious, onNext } =
+        props;
 
     const [contentHeight, setContentHeight] = useState(0);
 
@@ -77,7 +72,7 @@ const SurveySlide = (props: Props) => {
             case 'input':
                 return (
                     <SurveySlideInput
-                        colorScheme={colorScheme}
+                        theme={theme}
                         placeholder={slide?.placeholder}
                         onChange={(val: string) => onAnswerChange(val)}
                         multiline={!!slide?.multiline}
@@ -86,7 +81,7 @@ const SurveySlide = (props: Props) => {
             case 'multiplechoice':
                 return (
                     <SurveySlideSelect
-                        colorScheme={colorScheme}
+                        theme={theme}
                         options={slide.options}
                         multiple={!!slide.multiple}
                         onChange={(val: any[]) => onAnswerChange(val)}
@@ -95,14 +90,14 @@ const SurveySlide = (props: Props) => {
             case 'star':
                 return (
                     <SurveySlideStar
-                        colorScheme={colorScheme}
+                        theme={theme}
                         onChange={(val: number) => onAnswerChange(val)}
                     />
                 );
             case 'numeric':
                 return (
                     <SurveySlideNumeric
-                        colorScheme={colorScheme}
+                        theme={theme}
                         min={slide?.min || 0}
                         max={slide?.max || 5}
                         onChange={(val: number) => onAnswerChange(val)}
@@ -111,7 +106,7 @@ const SurveySlide = (props: Props) => {
             case 'nps':
                 return (
                     <SurveySlideNumeric
-                        colorScheme={colorScheme}
+                        theme={theme}
                         min={0}
                         max={10}
                         onChange={(val: number) => onAnswerChange(val)}
@@ -123,12 +118,12 @@ const SurveySlide = (props: Props) => {
     const _showCTA = onNext || onPrevious;
 
     return (
-        <View onLayout={handleLayout}>
+        <View onLayout={handleLayout} style={{ paddingBottom: 20 }}>
             <View style={styles.base.headerContainer}>
                 <Text
                     style={[
                         styles.base.title,
-                        colorScheme === 'dark' && styles.base.titleDark,
+                        { color: theme.title_color },
                         type === SlideType.text &&
                             (styles.base.titleCentered as TextStyle),
                     ]}
@@ -140,7 +135,7 @@ const SurveySlide = (props: Props) => {
                     <Text
                         style={[
                             styles.base.subtitle,
-                            colorScheme === 'dark' && styles.base.subtitleDark,
+                            { color: theme.subtitle_color },
                             type === SlideType.text &&
                                 (styles.base.subtitleCentered as TextStyle),
                         ]}
@@ -159,7 +154,8 @@ const SurveySlide = (props: Props) => {
                     <Button
                         onClick={onNext}
                         disabled={false}
-                        colorScheme={colorScheme}
+                        bgColor={theme.button_color}
+                        textColor={theme.button_text_color}
                         cta={slide.button_label || 'Next'}
                     />
                 </View>
@@ -170,11 +166,7 @@ const SurveySlide = (props: Props) => {
                     {onPrevious ? (
                         <TouchableOpacity onPress={onPrevious}>
                             <Image
-                                style={[
-                                    styles.slide.prevArrow,
-                                    colorScheme === 'dark' &&
-                                        styles.slide.prevArrowDark,
-                                ]}
+                                style={[{ tintColor: theme.title_color }]}
                                 source={require('./../../../assets/icons/arrow-left.png')}
                             />
                         </TouchableOpacity>
@@ -186,7 +178,8 @@ const SurveySlide = (props: Props) => {
                         <Button
                             onClick={onNext}
                             disabled={false}
-                            colorScheme={colorScheme}
+                            bgColor={theme.button_color}
+                            textColor={theme.button_text_color}
                             cta={slide.button_label || 'Next'}
                         />
                     )}

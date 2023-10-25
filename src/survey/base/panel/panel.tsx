@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
 
-        paddingBottom: 40,
+        // paddingBottom: 20,
 
         // iOS shadow properties
         shadowColor: '#000',

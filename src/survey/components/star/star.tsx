@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, View, Image, ViewStyle } from 'react-native';
+import { SurveyTheme } from './../../../types';
 import styles from '../../survey.style';
 
 interface Props {
     onChange: (val: number) => void;
-    colorScheme: 'light' | 'dark';
+    theme: SurveyTheme;
 }
 
 const SurveySlideStar = (props: Props) => {
-    const { onChange, colorScheme } = props;
+    const { onChange, theme } = props;
 
     const [value, setValue] = useState<number>(0);
 
@@ -31,17 +32,8 @@ const SurveySlideStar = (props: Props) => {
                             ? require('../../../assets/icons/star-outline-selected.png')
                             : require('../../../assets/icons/star-outline-not-selected.png')
                     }
-                    style={[
-                        styles.form.star.icon,
-                        colorScheme === 'dark'
-                            ? styles.form.star.iconDark
-                            : null,
-                        isSelected
-                            ? colorScheme === 'dark'
-                                ? styles.form.star.iconDarkSelected
-                                : styles.form.star.iconSelected
-                            : null,
-                    ]}
+                    style={styles.form.star.icon}
+                    tintColor={theme.answer_color}
                 />
             </TouchableOpacity>
         );

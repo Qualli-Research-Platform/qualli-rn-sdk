@@ -5,26 +5,28 @@ import styles from '../../survey.style';
 interface Props {
     cta: string;
     onClick: () => void;
-    colorScheme: 'light' | 'dark';
+    bgColor: string;
+    textColor: string;
     underline?: boolean;
     disabled: boolean;
     style?: any;
 }
 
 const Button = (props: Props) => {
-    const { cta, onClick, colorScheme, underline, disabled, style } = props;
+    const { cta, onClick, bgColor, textColor, underline, disabled, style } =
+        props;
 
     let buttonStyles = [
         styles.base.button.full,
-        colorScheme === 'dark' ? styles.base.button.fullDark : null,
         disabled ? styles.base.button.disabled : null,
+        { backgroundColor: bgColor },
         style,
     ];
 
     const labelStyles = [
         styles.base.button.label,
-        colorScheme === 'light' ? styles.base.button.labelDark : null,
         underline ? styles.base.button.labelUnderline : null,
+        { color: textColor },
     ];
 
     if (underline) {
@@ -33,10 +35,6 @@ const Button = (props: Props) => {
             disabled ? styles.base.button.disabled : null,
             style,
         ];
-
-        if (colorScheme === 'dark') {
-            labelStyles.push(styles.base.button.labelUnderlineDark);
-        }
     }
 
     return (

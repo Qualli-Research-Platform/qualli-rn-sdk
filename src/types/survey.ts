@@ -10,7 +10,7 @@ export interface Survey {
         // | CSATSlide
     >;
     person?: Person;
-    style: Style;
+    theme: SurveyTheme;
 }
 
 // DIFFERENT TYPES
@@ -57,10 +57,15 @@ export interface Slide {
     button_label?: string;
 }
 
-interface Style {
-    // iconStyle?: 'outline' | 'coloured' | 'emoji';
-    backgroundColor?: string;
-    colorScheme: 'light' | 'dark';
+export interface SurveyTheme {
+    unique_identifier: string;
+    name: string;
+    title_color: string;
+    subtitle_color: string;
+    answer_color: string;
+    button_color: string;
+    button_text_color: string;
+    background_color: string;
 }
 
 interface Person {
