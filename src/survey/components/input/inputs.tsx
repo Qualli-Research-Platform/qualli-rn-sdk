@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { TextInput } from 'react-native';
+import { SurveyTheme } from './../../../types';
 import styles from '../../survey.style';
 
 interface Props {
     placeholder: string;
     onChange: (val: string) => void;
     multiline: boolean;
-    colorScheme: 'light' | 'dark';
+    theme: SurveyTheme;
 }
 
 const SurveySlideInput = (props: Props) => {
-    const { onChange, placeholder, multiline, colorScheme } = props;
+    const { onChange, placeholder, multiline, theme } = props;
+    const { answer_color } = theme;
+
     const [value, setValue] = useState('');
 
     useEffect(() => {
@@ -27,14 +30,14 @@ const SurveySlideInput = (props: Props) => {
             style={[
                 styles.form.input.input,
                 multiline && styles.form.input.inputMultiline,
-                colorScheme === 'dark' ? styles.form.input.inputDark : null,
+                {
+                    color: answer_color,
+                    borderColor: answer_color,
+                    backgroundColor: answer_color + '10',
+                },
             ]}
             multiline={multiline}
-            placeholderTextColor={
-                colorScheme === 'dark'
-                    ? styles.form.input.placeholderDark
-                    : styles.form.input.placeholder
-            }
+            placeholderTextColor={answer_color}
         />
     );
 };

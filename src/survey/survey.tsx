@@ -34,13 +34,11 @@ const DIRECT_ANWER_TYPES: SlideType[] = [
     SlideType.nps,
     SlideType.numeric,
     SlideType.text,
-    // SlideType.csat,
 ];
 
 const Survey = (props: Props) => {
     const { survey, isVisible, onComplete, onAbortSurvey, onAnswer } = props;
-    const colorScheme = survey?.style?.colorScheme || 'light';
-    const backgroundColor = survey?.style?.backgroundColor || '#000';
+    const backgroundColor = survey?.theme.background_color;
 
     const [currentState, setCurrentState] = useState({
         currentIndex: -1,
@@ -120,7 +118,7 @@ const Survey = (props: Props) => {
                 >
                     <SurveySlide
                         slide={survey.slides[newIndex]}
-                        colorScheme={colorScheme}
+                        theme={survey.theme}
                         onHeightLayout={height => {
                             handleSlideHeightChange(
                                 height,
@@ -259,7 +257,7 @@ const Survey = (props: Props) => {
         >
             <View style={styles.headingWrapper}>
                 <SurveyHeading
-                    colorScheme={colorScheme}
+                    color={survey?.theme.title_color}
                     onClose={onAbortSurvey}
                 />
             </View>

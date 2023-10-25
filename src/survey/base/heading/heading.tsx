@@ -2,14 +2,12 @@ import React from 'react';
 import { TouchableOpacity, Image, StyleSheet, View } from 'react-native';
 
 interface Props {
-    colorScheme: 'light' | 'dark';
+    color: string;
     onClose: () => void;
 }
 
-import mainStyles from '../../survey.style';
-
 const SurveyHeading = (props: Props) => {
-    const { colorScheme, onClose } = props;
+    const { color, onClose } = props;
 
     return (
         <View style={styles.container}>
@@ -22,11 +20,7 @@ const SurveyHeading = (props: Props) => {
             >
                 <Image
                     source={require('./../../../assets/icons/cross.png')}
-                    tintColor={
-                        colorScheme === 'dark'
-                            ? mainStyles.colors.darkColor
-                            : mainStyles.colors.lightColor
-                    }
+                    tintColor={color}
                 />
             </TouchableOpacity>
         </View>

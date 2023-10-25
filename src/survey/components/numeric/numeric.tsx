@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, Text, View, ViewStyle } from 'react-native';
+import {
+    TouchableOpacity,
+    Text,
+    View,
+    ViewStyle,
+    TextStyle,
+} from 'react-native';
+import { SurveyTheme } from './../../../types';
+import getContrastingColorForRGB from './../../..//helpers/getContrastingColorForRGB';
+import hexToRgb from './../../../helpers/hexToRGB';
 import styles from '../../survey.style';
 
 interface Props {
     min: number;
     max: number;
     onChange: (val: number) => void;
-    colorScheme: 'light' | 'dark';
+    theme: SurveyTheme;
 }
 
 const SurveySlideNumeric = (props: Props) => {
-    const { onChange, colorScheme, min, max } = props;
+    const { onChange, theme, min, max } = props;
 
     const [value, setValue] = useState<number | null>(null);
 
@@ -19,23 +28,21 @@ const SurveySlideNumeric = (props: Props) => {
 
         const buttonStyles = [
             styles.form.numeric.button,
-            colorScheme === 'dark' ? styles.form.numeric.buttonDark : null,
-            colorScheme === 'dark' ? styles.form.numeric.buttonNPS : null,
-            isSelected
-                ? colorScheme === 'dark'
-                    ? styles.form.numeric.buttonSelectedDark
-                    : styles.form.numeric.buttonSelected
-                : null,
+            {
+                borderColor: theme.answer_color,
+                backgroundColor: isSelected
+                    ? theme.answer_color
+                    : theme.answer_color + '10',
+            },
         ];
 
         const labelStyles = [
             styles.form.numeric.label,
-            colorScheme === 'dark' ? styles.form.numeric.labelDark : null,
-            isSelected
-                ? colorScheme === 'dark'
-                    ? styles.form.numeric.labelSelectedDark
-                    : styles.form.numeric.labelSelected
-                : null,
+            {
+                color: isSelected
+                    ? getContrastingColorForRGB(hexToRgb(theme.answer_color))
+                    : theme.answer_color,
+            },
         ];
 
         return (
@@ -45,9 +52,9 @@ const SurveySlideNumeric = (props: Props) => {
                     setValue(option);
                     onChange(option);
                 }}
-                style={buttonStyles}
+                style={buttonStyles as ViewStyle}
             >
-                <Text style={labelStyles}>{option}</Text>
+                <Text style={labelStyles as TextStyle}>{option}</Text>
             </TouchableOpacity>
         );
     };
