@@ -122,7 +122,7 @@ const SurveySlide = (props: Props) => {
             <View style={styles.base.headerContainer}>
                 <Text
                     style={[
-                        styles.base.title,
+                        styles.base.title as TextStyle,
                         { color: theme.title_color },
                         type === SlideType.text &&
                             (styles.base.titleCentered as TextStyle),

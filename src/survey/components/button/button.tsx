@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text } from 'react-native';
+import { TouchableOpacity, Text, TextStyle } from 'react-native';
 import styles from '../../survey.style';
 
 interface Props {
@@ -44,7 +44,7 @@ const Button = (props: Props) => {
             disabled={disabled}
             hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
         >
-            <Text style={labelStyles}>{cta}</Text>
+            <Text style={labelStyles as TextStyle}>{cta}</Text>
         </TouchableOpacity>
     );
 };
