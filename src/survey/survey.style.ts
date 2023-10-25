@@ -77,14 +77,15 @@ const survey = {
                 padding: 16 + 3, // default padding + spacing for border
                 paddingHorizontal: 16,
                 position: 'relative',
+                overflow: 'hidden',
             },
             borderCollapse: {
                 position: 'absolute',
-                top: 0,
-                right: 0,
-                bottom: 0,
-                left: 0,
-                borderWidth: 2,
+                top: -1,
+                right: -1,
+                bottom: -1,
+                left: -1,
+                borderWidth: 3,
                 borderRadius: 8,
             },
             labelWrapper: {
