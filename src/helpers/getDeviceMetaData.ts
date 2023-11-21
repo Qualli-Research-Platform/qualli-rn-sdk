@@ -12,6 +12,7 @@ const getDeviceMetaData = async () => {
         build_number: string;
         bundle_id: string;
         brand: string;
+        os: string;
     } = {
         app_version: '',
         os_version: '',
@@ -22,6 +23,7 @@ const getDeviceMetaData = async () => {
         build_number: '',
         bundle_id: '',
         brand: '',
+        os: '',
     };
 
     // // App Version
@@ -53,6 +55,9 @@ const getDeviceMetaData = async () => {
 
     // Brand
     metadata.brand = DeviceInfo.getBrand();
+
+    // OS
+    metadata.os = Platform.OS;
 
     return metadata;
 };

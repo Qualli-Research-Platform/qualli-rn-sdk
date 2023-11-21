@@ -11,13 +11,14 @@ const Home = () => {
             <TouchableOpacity
                 onPress={() => {
                     qualli.setAttributes({
+                        plan: 'trial',
                         email: 'john@doe.com',
                         first_name: 'John',
                         last_name: 'Doe',
                     });
                 }}
             >
-                <Text>{'set some user attributes'}</Text>
+                <Text>{'Update User Attributes'}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -26,34 +27,13 @@ const Home = () => {
             >
                 <Text>{'trigger SUBSCRIBE'}</Text>
             </TouchableOpacity>
-
-            <TouchableOpacity
-                onPress={() => qualli.performTrigger('MESSAGE')}
-                style={{ marginTop: 20 }}
-            >
-                <Text>{'trigger MESSAGE'}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-                onPress={() => qualli.performTrigger('LISTENED')}
-                style={{ marginTop: 20 }}
-            >
-                <Text>{'trigger LISTENED'}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-                onPress={() => qualli.performTrigger('EXITED')}
-                style={{ marginTop: 20 }}
-            >
-                <Text>{'trigger EXITED'}</Text>
-            </TouchableOpacity>
         </View>
     );
 };
 
 export default function App() {
     return (
-        <QualliProvider apiKey="08e83b96-a975-4523-8562-e44806d2a352">
+        <QualliProvider apiKey="120wed885-7f8f-4846-9fa8-3lnqbdfa946">
             <Home />
         </QualliProvider>
     );
