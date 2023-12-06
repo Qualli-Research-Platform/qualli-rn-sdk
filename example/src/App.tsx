@@ -1,6 +1,11 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import {
+    StyleSheet,
+    View,
+    Image,
+    TouchableWithoutFeedback,
+} from 'react-native';
 import { QualliProvider, useQualli } from '@qualli/qualli-rn-sdk';
 
 const Home = () => {
@@ -8,32 +13,25 @@ const Home = () => {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity
-                onPress={() => {
-                    qualli.setAttributes({
-                        plan: 'trial',
-                        email: 'john@doe.com',
-                        first_name: 'John',
-                        last_name: 'Doe',
-                    });
-                }}
-            >
-                <Text>{'Update User Attributes'}</Text>
-            </TouchableOpacity>
+            <Image
+                source={require('./../assets/bg-1.png')}
+                style={styles.bg}
+                resizeMethod="scale"
+                resizeMode="cover"
+            />
 
-            <TouchableOpacity
+            <TouchableWithoutFeedback
                 onPress={() => qualli.performTrigger('SUBSCRIBE')}
-                style={{ marginTop: 20 }}
             >
-                <Text>{'trigger SUBSCRIBE'}</Text>
-            </TouchableOpacity>
+                <View style={{ width: 400, height: 400 }}></View>
+            </TouchableWithoutFeedback>
         </View>
     );
 };
 
 export default function App() {
     return (
-        <QualliProvider apiKey="120wed885-7f8f-4846-9fa8-3lnqbdfa946">
+        <QualliProvider apiKey="YOUR_API_KEY">
             <Home />
         </QualliProvider>
     );
@@ -49,5 +47,14 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         marginVertical: 20,
+    },
+    bg: {
+        position: 'absolute',
+        height: '100%',
+        width: '100%',
+        top: 20,
+        left: 0,
+        right: 0,
+        bottom: 0,
     },
 });

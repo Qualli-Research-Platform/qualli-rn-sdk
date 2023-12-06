@@ -1,17 +1,31 @@
 import React from 'react';
-import { TouchableOpacity, Image, StyleSheet, View } from 'react-native';
+import { TouchableOpacity, Image, StyleSheet, View, Text } from 'react-native';
 
 interface Props {
     color: string;
+    companyPlan: string;
     onClose: () => void;
 }
 
 const SurveyHeading = (props: Props) => {
-    const { color, onClose } = props;
+    const { color, onClose, companyPlan } = props;
 
     return (
         <View style={styles.container}>
-            <View style={styles.leftContainer} />
+            <View style={styles.leftContainer}>
+                {companyPlan === 'free' && (
+                    <Text
+                        style={[
+                            {
+                                color: color,
+                            },
+                            styles.branding,
+                        ]}
+                    >
+                        {'Powered by Qualli'}
+                    </Text>
+                )}
+            </View>
 
             <TouchableOpacity
                 style={styles.closeIcon}
@@ -30,7 +44,8 @@ const SurveyHeading = (props: Props) => {
 const styles = StyleSheet.create({
     container: {
         width: '100%',
-        padding: 8,
+        paddingTop: 8,
+        paddingBottom: 16,
         paddingRight: 0,
         flexDirection: 'row',
         alignItems: 'flex-start',
@@ -40,6 +55,9 @@ const styles = StyleSheet.create({
     },
     closeIcon: {
         width: 16,
+    },
+    branding: {
+        textDecorationLine: 'underline',
     },
 });
 

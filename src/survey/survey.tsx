@@ -18,6 +18,7 @@ interface Props {
     survey?: SurveyType;
     isVisible?: boolean;
     answers: { [key: string]: any };
+    companyPlan: string;
     onComplete: () => void;
     onAbortSurvey: () => void;
     onAnswer: (slideId: string, answer: any) => void;
@@ -259,6 +260,7 @@ const Survey = (props: Props) => {
                 <SurveyHeading
                     color={survey?.theme.title_color}
                     onClose={onAbortSurvey}
+                    companyPlan={props.companyPlan}
                 />
             </View>
 

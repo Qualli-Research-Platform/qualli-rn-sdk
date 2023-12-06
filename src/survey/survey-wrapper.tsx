@@ -10,7 +10,9 @@ interface SurveyComponentProps {
         data: any,
     ) => void;
     survey?: SurveyType;
+    companyPlan: string;
 }
+
 const BASE_SURVEY_STATE = {
     survey: undefined,
     answers: {},
@@ -20,6 +22,7 @@ const BASE_SURVEY_STATE = {
 
 const SurveyWrapper: React.FC<SurveyComponentProps> = ({
     survey,
+    companyPlan,
     logSurveyAction,
 }) => {
     const [currentSurveyState, setCurrentSurveyState] = useState<{
@@ -146,6 +149,7 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
                     isVisible={currentSurveyState.isVisible}
                     survey={currentSurveyState.survey}
                     answers={currentSurveyState.answers}
+                    companyPlan={companyPlan}
                     onComplete={onSurveyComplete}
                     onAbortSurvey={abortSurvey}
                     onAnswer={saveAnswer}

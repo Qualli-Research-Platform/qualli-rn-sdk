@@ -20,6 +20,9 @@ interface AuthState {
     authenticating: boolean;
     sessionKey: string | null;
     userKey: string | null;
+    company: {
+        plan: 'free' | 'essentials' | 'advanced';
+    };
 }
 
 interface QualliContextProps {
@@ -43,6 +46,9 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
         authenticating: false,
         sessionKey: null,
         userKey: null,
+        company: {
+            plan: 'free',
+        },
     });
 
     const [surveyState, setSurveyState] = useState({
@@ -106,6 +112,9 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
             authenticating: true,
             sessionKey: response.session_key,
             userKey: response.app_user_key,
+            company: {
+                plan: response.company_info?.plan,
+            },
         };
 
         // in the background set the users latest attributes
@@ -189,6 +198,7 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
             <SurveyWrapper
                 survey={surveyState?.survey}
                 logSurveyAction={logSurveyAction}
+                companyPlan={authState?.current?.company?.plan || 'free'}
             />
         </QualliContext.Provider>
     );
