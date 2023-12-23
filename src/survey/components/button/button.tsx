@@ -10,11 +10,20 @@ interface Props {
     underline?: boolean;
     disabled: boolean;
     style?: any;
+    textStyle?: TextStyle;
 }
 
 const Button = (props: Props) => {
-    const { cta, onClick, bgColor, textColor, underline, disabled, style } =
-        props;
+    const {
+        cta,
+        onClick,
+        bgColor,
+        textColor,
+        underline,
+        disabled,
+        style,
+        textStyle,
+    } = props;
 
     let buttonStyles = [
         styles.base.button.full,
@@ -27,6 +36,7 @@ const Button = (props: Props) => {
         styles.base.button.label,
         underline ? styles.base.button.labelUnderline : null,
         { color: textColor },
+        textStyle,
     ];
 
     if (underline) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { Survey as SurveyType, SurveyActions } from './../types/index';
 import Survey from './survey';
@@ -8,7 +8,7 @@ interface SurveyComponentProps {
         surveyUniqueId: any,
         action: SurveyActions,
         data: any,
-    ) => void;
+    ) => Promise<any>;
     survey?: SurveyType;
     companyPlan: string;
 }
@@ -33,13 +33,14 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
     }>({
         ...BASE_SURVEY_STATE,
     });
+    const uniqueGroupAnswerId = useRef<string>();
 
     useEffect(() => {
         if (currentSurveyState.completed) {
             logSurveyAction(
                 currentSurveyState?.survey?.unique_identifier as string,
                 SurveyActions.SURVEY_COMPLETED,
-                { answers: currentSurveyState.answers },
+                {},
             );
             hideSurvey();
         }
@@ -68,10 +69,31 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
         }
     }, [survey]);
 
-    const saveAnswer = (slideId: string, value: any) => {
-        setCurrentSurveyState(prevState => {
-            const newAnswers = { ...prevState.answers, [slideId]: value };
-            return { ...prevState, answers: newAnswers };
+    const saveAnswer = async (slideId: string, value: any) => {
+        // setCurrentSurveyState(prevState => {
+        //     const newAnswers = { ...prevState.answers, [slideId]: value };
+        //     return { ...prevState, answers: newAnswers };
+        // });
+
+        const data: any = {
+            answers: {
+                [slideId]: value,
+            },
+        };
+
+        if (uniqueGroupAnswerId.current) {
+            data['unique_group_answer_id'] = uniqueGroupAnswerId.current;
+        }
+
+        logSurveyAction(
+            currentSurveyState?.survey?.unique_identifier as string,
+            SurveyActions.SURVEY_SLIDE_ANSWERED,
+            data,
+        ).then((response: any) => {
+            if (response?.data?.unique_group_answer_id) {
+                uniqueGroupAnswerId.current =
+                    response?.data?.unique_group_answer_id;
+            }
         });
     };
 
@@ -109,6 +131,15 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
                 };
             });
         }, 300);
+    };
+
+    const onClose = () => {
+        if (currentSurveyState.completed) {
+            hideSurvey();
+            return;
+        }
+
+        abortSurvey();
     };
 
     const onSurveyComplete = () => {
@@ -153,6 +184,8 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
                     onComplete={onSurveyComplete}
                     onAbortSurvey={abortSurvey}
                     onAnswer={saveAnswer}
+                    onClose={onClose}
+                    closeSurvey={hideSurvey}
                 />
             </KeyboardAvoidingView>
         </View>

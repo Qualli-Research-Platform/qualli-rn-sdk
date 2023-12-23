@@ -1,29 +1,30 @@
 import React from 'react';
-import { TouchableOpacity, Image, StyleSheet, View, Text } from 'react-native';
+import { TouchableOpacity, Image, StyleSheet, View } from 'react-native';
+import Button from '../../components/button/button';
+import { SurveyTheme } from '../../..//types';
 
 interface Props {
-    color: string;
     companyPlan: string;
+    theme: SurveyTheme;
     onClose: () => void;
 }
 
 const SurveyHeading = (props: Props) => {
-    const { color, onClose, companyPlan } = props;
+    const { theme, onClose, companyPlan } = props;
 
     return (
         <View style={styles.container}>
             <View style={styles.leftContainer}>
                 {companyPlan === 'free' && (
-                    <Text
-                        style={[
-                            {
-                                color: color,
-                            },
-                            styles.branding,
-                        ]}
-                    >
-                        {'Powered by Qualli'}
-                    </Text>
+                    <Button
+                        cta="Powered by Qualli"
+                        onClick={() => null}
+                        bgColor={theme.button_color}
+                        textColor={theme.button_text_color}
+                        disabled={false}
+                        style={{ paddingHorizontal: 14, paddingVertical: 8 }}
+                        textStyle={{ fontSize: 12 }}
+                    />
                 )}
             </View>
 
@@ -34,7 +35,7 @@ const SurveyHeading = (props: Props) => {
             >
                 <Image
                     source={require('./../../../assets/icons/cross.png')}
-                    tintColor={color}
+                    tintColor={theme.title_color}
                 />
             </TouchableOpacity>
         </View>
@@ -52,6 +53,8 @@ const styles = StyleSheet.create({
     },
     leftContainer: {
         flex: 1,
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
     },
     closeIcon: {
         width: 16,

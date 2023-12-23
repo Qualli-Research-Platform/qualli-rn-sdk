@@ -31,27 +31,26 @@ yarn add @qualli/qualli-rn-sdk
 
 ### Dependencies
 
-Our SDK relies on two essential dependency packages:
+Our SDK relies on one essential dependency package. Most likely already present in your application.:
 
 -   `@react-native-async-storage/async-storage` - Used for storing local keys that identify the user.
--   `react-native-device-info` - Helps in adding metadata to your users and events.
 
 ### Install Dependencies
 
 #### 1. Bare RN installation
 
-Install the necessary dependencies using yarn:
+Install the necessary dependency using yarn:
 
 ```bash
-yarn add @react-native-async-storage/async-storage react-native-device-info
+yarn add @react-native-async-storage/async-storage
 ```
 
 #### 2. If you are using Expo
 
-To ensure compatibility with Expo, use the following commands:
+To ensure compatibility with Expo, use the following command:
 
 ```bash
-npx expo install @react-native-async-storage/async-storage react-native-device-info
+npx expo install @react-native-async-storage/async-storage
 ```
 
 For Expo, you might need to create a development build. Detailed documentation can be found [here](https://docs.expo.dev/develop/development-builds/installation/).
@@ -112,10 +111,19 @@ Accepted value types:
 -   String
 -   Number
 
-The following attributes are provided on root user level:
+The following attributes are provided on root user level. These attributes are reserved and cannot be changed by you:
 
 -   email
 -   name
+-   first_name
+-   last_name
+-   email
+-   unique_identifier
+-   last_seen_web
+-   last_seen_app
+-   sessions_count
+-   app_sessions_count
+-   web_sessions_count
 
 ```jsx
 const qualli = useQualli();

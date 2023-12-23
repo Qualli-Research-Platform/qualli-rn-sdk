@@ -2670,7 +2670,6 @@ __metadata:
     react: 18.2.0
     react-native: 0.72.5
     react-native-builder-bob: ^0.23.1
-    react-native-device-info: ^10.11.0
     release-it: ^16.2.1
     typescript: ^5.1.0
   peerDependencies:
@@ -13159,8 +13158,6 @@ __metadata:
     react: 18.2.0
     react-dom: 18.2.0
     react-native: 0.72.5
-    react-native-device-info: ^10.11.0
-    react-native-web: ~0.19.6
   languageName: unknown
   linkType: soft
 
@@ -13317,15 +13314,6 @@ __metadata:
   bin:
     bob: bin/bob
   checksum: 58e7c991d80adcd394613debafd9f0d5ce56ee666aa7940c67ac422cdeac09098e0d96cac2985f79d62256fb6ebad7cfc0c3e240df77bae8716d9d293f1f5c7d
-  languageName: node
-  linkType: hard
-
-"react-native-device-info@npm:^10.11.0":
-  version: 10.11.0
-  resolution: "react-native-device-info@npm:10.11.0"
-  peerDependencies:
-    react-native: "*"
-  checksum: 3f2de34df4e95e87291673fe69b09d3b96f9088177a8dadd92eccec86549cea63ca08ab82f120d4150eb0302ac721ad8a5e4b3a8136c9f54f0212e4c055762b0
   languageName: node
   linkType: hard
 

@@ -11,7 +11,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import logger from './../helpers/logger';
 import ApiManager from './../networking/ApiManager';
-import getDeviceMetaData from './../helpers/getDeviceMetaData';
 import { SurveyActions } from './../types';
 
 import SurveyWrapper from './../survey/survey-wrapper';
@@ -116,14 +115,6 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
                 plan: response.company_info?.plan,
             },
         };
-
-        // in the background set the users latest attributes
-        setDefaultUserAttributes();
-    };
-
-    const setDefaultUserAttributes = async () => {
-        const baseAttributes = await getDeviceMetaData();
-        setAttributes(baseAttributes);
     };
 
     const saveAppState = async () => {
@@ -157,7 +148,7 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
         action: SurveyActions,
         data: any,
     ) => {
-        ApiManager.logSurveyAction(
+        return await ApiManager.logSurveyAction(
             apiKey,
             authState.current.sessionKey as string,
             surveyUniqueId,

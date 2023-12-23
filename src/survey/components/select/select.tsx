@@ -13,13 +13,14 @@ import styles from '../../survey.style';
 
 interface Props {
     options: { label: string }[];
-    onChange: (val: string[]) => void;
     multiple: boolean;
     theme: SurveyTheme;
+    onChange: (val: string[]) => void;
+    onSubmit: () => void;
 }
 
 const SurveySlideSelect = (props: Props) => {
-    const { options, onChange, multiple, theme } = props;
+    const { options, onChange, onSubmit, multiple, theme } = props;
 
     const [values, setValues] = useState<string[]>([]);
 
@@ -45,6 +46,10 @@ const SurveySlideSelect = (props: Props) => {
                     } else {
                         setValues([option]);
                         onChange([option]);
+                    }
+
+                    if (!multiple) {
+                        onSubmit();
                     }
                 }}
                 style={[
