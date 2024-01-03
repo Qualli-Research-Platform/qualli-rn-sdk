@@ -15,17 +15,20 @@ import {
     type StarSlide,
     type NumericSlide,
     type NPSSlide,
+    type OutroSlide,
     SlideType,
     TextSlide,
     SurveyTheme,
 } from './../../../types';
+import Button from '../../components/button/button';
 import styles from '../../survey.style';
 
 import SurveySlideInput from '../../components/input/inputs';
 import SurveySlideSelect from '../../components/select/select';
 import SurveySlideStar from '../../components/star/star';
 import SurveySlideNumeric from '../../components/numeric/numeric';
-import Button from '../../components/button/button';
+import { DIRECT_ANWER_TYPES } from '../../survey';
+import {} from '../../../types/survey';
 
 interface Props {
     slide:
@@ -34,12 +37,13 @@ interface Props {
         | StarSlide
         | NumericSlide
         | NPSSlide
-        | TextSlide;
+        | TextSlide
+        | OutroSlide;
     theme: SurveyTheme;
     onHeightLayout: (height: number) => void;
     onAnswerChange: (answer: any) => void;
     onPrevious?: () => void;
-    onNext?: () => void;
+    onNext: (saveAnswer?: boolean) => void;
 }
 
 const SurveySlide = (props: Props) => {
@@ -85,6 +89,7 @@ const SurveySlide = (props: Props) => {
                         options={slide.options}
                         multiple={!!slide.multiple}
                         onChange={(val: any[]) => onAnswerChange(val)}
+                        onSubmit={onNext}
                     />
                 );
             case 'star':
@@ -115,7 +120,9 @@ const SurveySlide = (props: Props) => {
         }
     };
 
-    const _showCTA = onNext || onPrevious;
+    const showCTA = !!(onNext || onPrevious);
+    const centerText = type === SlideType.text || type === SlideType.outro;
+    const isTextOrOutro = type === SlideType.text || type === SlideType.outro;
 
     return (
         <View onLayout={handleLayout} style={{ paddingBottom: 20 }}>
@@ -126,6 +133,7 @@ const SurveySlide = (props: Props) => {
                         { color: theme.title_color },
                         type === SlideType.text &&
                             (styles.base.titleCentered as TextStyle),
+                        centerText && { textAlign: 'center' },
                     ]}
                 >
                     {title}
@@ -138,6 +146,7 @@ const SurveySlide = (props: Props) => {
                             { color: theme.subtitle_color },
                             type === SlideType.text &&
                                 (styles.base.subtitleCentered as TextStyle),
+                            centerText && { textAlign: 'center' },
                         ]}
                     >
                         {subtitle}
@@ -149,7 +158,7 @@ const SurveySlide = (props: Props) => {
                 {renderSlideInputs()}
             </View>
 
-            {!!onNext && type === SlideType.text && (
+            {!!onNext && isTextOrOutro && (
                 <View style={styles.slide.CTAContainerText as ViewStyle}>
                     <Button
                         onClick={onNext}
@@ -161,7 +170,7 @@ const SurveySlide = (props: Props) => {
                 </View>
             )}
 
-            {_showCTA && (
+            {showCTA && (
                 <View style={styles.slide.CTAContainer as ViewStyle}>
                     {onPrevious ? (
                         <TouchableOpacity onPress={onPrevious}>
@@ -174,15 +183,20 @@ const SurveySlide = (props: Props) => {
                         <View />
                     )}
 
-                    {!!onNext && type !== SlideType.text && (
-                        <Button
-                            onClick={onNext}
-                            disabled={false}
-                            bgColor={theme.button_color}
-                            textColor={theme.button_text_color}
-                            cta={slide.button_label || 'Next'}
-                        />
-                    )}
+                    {!!onNext &&
+                        !isTextOrOutro &&
+                        !DIRECT_ANWER_TYPES.includes(type) &&
+                        !(
+                            type === SlideType.multiplechoice && !slide.multiple
+                        ) && (
+                            <Button
+                                onClick={onNext}
+                                disabled={false}
+                                bgColor={theme.button_color}
+                                textColor={theme.button_text_color}
+                                cta={slide.button_label || 'Next'}
+                            />
+                        )}
                 </View>
             )}
         </View>

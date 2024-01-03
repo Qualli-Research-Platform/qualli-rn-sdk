@@ -6,7 +6,7 @@ import logger from './../helpers/logger';
 
 const ApiManager = {
     identify: async (apiKey: string, userKey?: string) => {
-        const url = `${API_BASE_PATH}app-user/identify`;
+        const url = `${API_BASE_PATH}app-user/start-session`;
         try {
             const jsonResponse = await apiRequest({
                 apiKey,
@@ -119,7 +119,7 @@ const ApiManager = {
                 headers,
                 body: { action, data, timestamp: new Date() },
             });
-            logger('QUALLI: Successfully logged the survey action');
+            logger('QUALLI: Successfully logged the survey action: ' + action);
         } catch (error: any) {
             logger(error?.response || '');
             console.error('QUALLI: Error logging the survey action: ', error);

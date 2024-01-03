@@ -7,9 +7,9 @@ export interface Survey {
         | NumericSlide
         | NPSSlide
         | TextSlide
-        // | CSATSlide
     >;
     person?: Person;
+    outro?: OutroSlide;
     theme: SurveyTheme;
 }
 
@@ -44,9 +44,14 @@ export interface NPSSlide extends Slide {
     type: SlideType.nps;
 }
 
-// export interface CSATSlide extends Slide {
-//     type: SlideType.csat;
-// }
+export interface OutroSlide {
+    unique_identifier: string;
+    type: SlideType.outro;
+    title: string;
+    subtitle?: string;
+    button_label?: string;
+    button_url?: string;
+}
 
 // BASE
 export interface Slide {
@@ -81,11 +86,12 @@ export enum SlideType {
     'numeric' = 'numeric',
     'nps' = 'nps',
     'text' = 'text',
-    // 'csat' = 'csat',
+    'outro' = 'outro',
 }
 
 export enum SurveyActions {
     SURVEY_SHOWN = 'survey_shown',
     SURVEY_COMPLETED = 'survey_completed',
     SURVEY_SKIPPED = 'survey_skipped',
+    SURVEY_SLIDE_ANSWERED = 'survey_slide_answered',
 }

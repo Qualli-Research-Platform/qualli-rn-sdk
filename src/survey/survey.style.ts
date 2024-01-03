@@ -19,7 +19,7 @@ const survey = {
         },
         button: {
             full: {
-                borderRadius: 14,
+                borderRadius: 12,
                 paddingVertical: 12,
                 paddingHorizontal: 24,
             },
@@ -131,13 +131,13 @@ const survey = {
                 paddingVertical: 8,
                 paddingHorizontal: 8,
                 borderWidth: 1,
-                height: 40,
-                borderRadius: 20,
-                marginHorizontal: 4,
-                marginVertical: 4,
+                height: 45,
+                borderRadius: 6,
+                marginHorizontal: 2,
+                marginVertical: 2,
                 justifyContent: 'center',
                 alignitems: 'center',
-                minWidth: 40,
+                minWidth: 45,
             },
             buttonNPS: {
                 width: 40,
