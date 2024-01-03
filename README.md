@@ -17,6 +17,8 @@ Welcome to the Qualli RN SDK! This SDK allows you to effortlessly integrate Qual
         -   [Adding the Provider](#adding-the-provider)
         -   [Setting Up Triggers](#setting-up-triggers)
         -   [Setting Custom Attributes](#setting-custom-attributes)
+        -   [Anonymous vs Identified accounts](#anonymous-vs-identified-accounts)
+        -   [Identifying your users](#identifying-your-users)
     -   [Contribution](#contribution)
 
 ## Installation
@@ -92,6 +94,7 @@ function App() {
 -   `app_opened`
 -   `app_closed`
 -   `app_backgrounded`
+-   `track_screen`
 
 To invoke a trigger, use the `performTrigger` function:
 
@@ -133,6 +136,36 @@ qualli.setAttributes({
     first_name: 'John',
     last_name: 'Doe',
     custom_attribute: 'value',
+});
+```
+
+### Anonymous vs Identified accounts
+
+By default when a new user opens your app, we will create a anonymous account. When you call `setAttributes` with the `company_identifier` we will create a "active" account.
+
+Anonymous accounts are removed after 14 days, "active" accounts will never be removed. So it's vital to always identify your accounts where possible.
+
+!important!
+We will never remove any answers. When we remove the anonymous accounts, all answers remain available.
+
+### Identifying your users
+
+Qualli allows for you to uniquely identify your users, using the `company_identifier` attribute. E.g. when the user logs in to your app, you want all events to be tracked under their main Qualli account, or target them in the audience_filter.
+
+When you set the `company_identifier` we will check if we already have a user with this identifier.
+
+If this is the case: We will transfer the current users attributes to your "parent" user.
+If not: We will set the identifier for you to later on re-identify your users.
+
+```jsx
+const qualli = useQualli();
+
+qualli.setAttributes({
+    email: 'example@email.com',
+    first_name: 'John',
+    last_name: 'Doe',
+    custom_attribute: 'value',
+    company_identifier: 'YOUR_UNIQUE_ID',
 });
 ```
 

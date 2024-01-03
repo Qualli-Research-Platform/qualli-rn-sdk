@@ -28,6 +28,7 @@ interface QualliContextProps {
     authState: any;
     performTrigger: (trigger: string) => void;
     setAttributes: (attributes: { [key: string]: string | number }) => void;
+    reset: () => void;
 }
 
 interface QualliProviderProps {
@@ -177,12 +178,30 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
         setSurveyState({ survey: undefined });
     };
 
+    const reset = async () => {
+        await AsyncStorage.removeItem('app_user_key');
+
+        authState.current = {
+            authenticating: false,
+            sessionKey: null,
+            userKey: null,
+            company: {
+                plan: 'free',
+            },
+        };
+
+        setSurveyState({ survey: undefined });
+
+        identifyUser();
+    };
+
     return (
         <QualliContext.Provider
             value={{
                 authState: authState?.current,
                 performTrigger,
                 setAttributes,
+                reset,
             }}
         >
             {children}

@@ -1,11 +1,6 @@
 import * as React from 'react';
 
-import {
-    StyleSheet,
-    View,
-    Image,
-    TouchableWithoutFeedback,
-} from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native';
 import { QualliProvider, useQualli } from '@qualli/qualli-rn-sdk';
 
 const Home = () => {
@@ -20,18 +15,35 @@ const Home = () => {
                 resizeMode="cover"
             />
 
-            <TouchableWithoutFeedback
+            <TouchableOpacity
+                style={styles.btn}
                 onPress={() => qualli.performTrigger('SUBSCRIBE')}
             >
-                <View style={{ width: 400, height: 400 }}></View>
-            </TouchableWithoutFeedback>
+                <Text>Subscribe</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                style={styles.btn}
+                onPress={() =>
+                    qualli.setAttributes({
+                        first_name: 'John',
+                        company_identifier: '1234567890',
+                    })
+                }
+            >
+                <Text>Set Attributes</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.btn} onPress={() => qualli.reset()}>
+                <Text>Reset</Text>
+            </TouchableOpacity>
         </View>
     );
 };
 
 export default function App() {
     return (
-        <QualliProvider apiKey="YOUR_API_KEY">
+        <QualliProvider apiKey="148c0376-9845-46d3-afc2-3d451816930d">
             <Home />
         </QualliProvider>
     );
@@ -56,5 +68,11 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
+    },
+    btn: {
+        backgroundColor: 'green',
+        padding: 20,
+        borderRadius: 10,
+        marginVertical: 10,
     },
 });
