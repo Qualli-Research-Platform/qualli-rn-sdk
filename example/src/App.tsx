@@ -43,7 +43,7 @@ const Home = () => {
 
 export default function App() {
     return (
-        <QualliProvider apiKey="148c0376-9845-46d3-afc2-3d451816930d">
+        <QualliProvider apiKey="YOUR_API_KEY">
             <Home />
         </QualliProvider>
     );
