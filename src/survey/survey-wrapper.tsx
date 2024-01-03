@@ -182,7 +182,6 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
                     answers={currentSurveyState.answers}
                     companyPlan={companyPlan}
                     onComplete={onSurveyComplete}
-                    onAbortSurvey={abortSurvey}
                     onAnswer={saveAnswer}
                     onClose={onClose}
                     closeSurvey={hideSurvey}
