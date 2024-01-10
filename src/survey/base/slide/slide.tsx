@@ -27,8 +27,7 @@ import SurveySlideInput from '../../components/input/inputs';
 import SurveySlideSelect from '../../components/select/select';
 import SurveySlideStar from '../../components/star/star';
 import SurveySlideNumeric from '../../components/numeric/numeric';
-import { DIRECT_ANWER_TYPES } from '../../survey';
-import {} from '../../../types/survey';
+import { DIRECT_ANWER_TYPES } from '../../../config/slide.config';
 
 interface Props {
     slide:

@@ -70,11 +70,6 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
     }, [survey]);
 
     const saveAnswer = async (slideId: string, value: any) => {
-        // setCurrentSurveyState(prevState => {
-        //     const newAnswers = { ...prevState.answers, [slideId]: value };
-        //     return { ...prevState, answers: newAnswers };
-        // });
-
         const data: any = {
             answers: {
                 [slideId]: value,
@@ -162,12 +157,17 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
         hideSurvey();
     };
 
+    // when no survey is available, or the survey is not visible, do not render anything
+    // FIX: support for older versions of react-native, not supporting pointerEvents
+    if (!currentSurveyState.survey && !currentSurveyState.isVisible) {
+        return null;
+    }
+
     return (
         <View
             style={{
                 ...StyleSheet.absoluteFillObject,
                 zIndex: 1,
-                pointerEvents: currentSurveyState.isVisible ? 'auto' : 'none',
                 flex: 1,
                 alignItems: 'flex-end',
                 justifyContent: 'flex-end',

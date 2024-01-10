@@ -13,6 +13,7 @@ import DynamicHeightView from './../common/dynamicHeightView';
 import SurveyPanel from './base/panel/panel';
 import SurveySlide from './base/slide/slide';
 import SurveyHeading from './base/heading/heading';
+import { DIRECT_ANWER_TYPES, SHOW_NEXT_TYPES } from '../config/slide.config';
 
 interface Props {
     survey?: SurveyType;
@@ -24,19 +25,6 @@ interface Props {
     onAnswer: (slideId: string, answer: any) => void;
     closeSurvey: () => void;
 }
-
-export const SHOW_NEXT_TYPES: SlideType[] = [
-    SlideType.input,
-    SlideType.multiplechoice,
-    SlideType.input,
-];
-
-export const DIRECT_ANWER_TYPES: SlideType[] = [
-    SlideType.star,
-    SlideType.nps,
-    SlideType.numeric,
-    SlideType.text,
-];
 
 const Survey = (props: Props) => {
     const { survey, isVisible, onComplete, onClose, onAnswer, closeSurvey } =
