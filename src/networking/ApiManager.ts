@@ -112,7 +112,7 @@ const ApiManager = {
         const headers = { 'user-session-key': userSessionKey };
 
         try {
-            await apiRequest({
+            const res = await apiRequest({
                 apiKey,
                 url,
                 method: 'POST',
@@ -120,6 +120,7 @@ const ApiManager = {
                 body: { action, data, timestamp: new Date() },
             });
             logger('QUALLI: Successfully logged the survey action: ' + action);
+            return res;
         } catch (error: any) {
             logger(error?.response || '');
             console.error('QUALLI: Error logging the survey action: ', error);

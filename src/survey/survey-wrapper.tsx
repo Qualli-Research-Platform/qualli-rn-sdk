@@ -100,6 +100,10 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
                 isVisible: true,
             };
         });
+
+        // clear out previous group answer id
+        uniqueGroupAnswerId.current = undefined;
+
         logSurveyAction(
             newSurvey.unique_identifier,
             SurveyActions.SURVEY_SHOWN,
