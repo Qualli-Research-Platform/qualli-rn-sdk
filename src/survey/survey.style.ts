@@ -30,7 +30,7 @@ const survey = {
                 opacity: 0.5,
             },
             label: {
-                fontWeight: 500,
+                fontWeight: '500',
                 fontSize: 16,
             },
             labelUnderline: {
@@ -95,7 +95,7 @@ const survey = {
                 alignItems: 'center',
             },
             label: {
-                fontWeight: 500,
+                fontWeight: '500',
                 fontSize: 14,
             },
             icon: {
@@ -144,7 +144,7 @@ const survey = {
             },
             label: {
                 textAlign: 'center',
-                fontWeight: 600,
+                fontWeight: '600',
             },
         },
     },
