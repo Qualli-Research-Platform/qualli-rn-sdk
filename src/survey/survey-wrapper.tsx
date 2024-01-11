@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
-import { Survey as SurveyType, SurveyActions } from './../types/index';
+import { Survey as SurveyType, SurveyActions } from './../types/survey';
 import Survey from './survey';
 
 interface SurveyComponentProps {
@@ -103,7 +103,6 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
 
         // clear out previous group answer id
         uniqueGroupAnswerId.current = undefined;
-
         logSurveyAction(
             newSurvey.unique_identifier,
             SurveyActions.SURVEY_SHOWN,

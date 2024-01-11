@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import logger from './../helpers/logger';
 import ApiManager from './../networking/ApiManager';
-import { SurveyActions } from './../types';
+import { SurveyActions } from './../types/survey';
 
 import SurveyWrapper from './../survey/survey-wrapper';
 
