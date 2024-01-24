@@ -19,7 +19,6 @@ const SurveyHeading = (props: Props) => {
                         style={{
                             backgroundColor: theme.button_color,
                             borderRadius: 12,
-                            fontSize: 12,
                             paddingHorizontal: 14,
                             paddingVertical: 8,
                         }}
@@ -27,6 +26,7 @@ const SurveyHeading = (props: Props) => {
                         <Text
                             style={{
                                 color: theme.button_text_color,
+                                fontSize: 12,
                             }}
                         >
                             Powered by Qualli
