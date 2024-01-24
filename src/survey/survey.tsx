@@ -5,6 +5,7 @@ import {
     ScrollView,
     Dimensions,
     Keyboard,
+    Animated,
 } from 'react-native';
 
 import { type Survey as SurveyType, SlideType, Slide } from './../types';
@@ -35,6 +36,7 @@ const Survey = (props: Props) => {
         currentIndex: -1,
         slideHeights: {},
         completed: false,
+        scrolling: true,
     });
     const [isNew, setIsNew] = useState(true);
     const [isSurveyActive, setIsSurveyActive] = useState(false);
@@ -52,6 +54,18 @@ const Survey = (props: Props) => {
         showNext: false,
         currentSlide: undefined,
     });
+
+    // Create an Animated.Value for controlling opacity
+    const opacityAnim = React.useRef(new Animated.Value(1)).current;
+
+    useEffect(() => {
+        // Animate the opacity when currentState.scrolling changes
+        Animated.timing(opacityAnim, {
+            toValue: currentState.scrolling ? 0 : 1,
+            duration: 200,
+            useNativeDriver: true,
+        }).start();
+    }, [currentState.scrolling]);
 
     useEffect(() => {
         if (isVisible) {
@@ -84,6 +98,9 @@ const Survey = (props: Props) => {
         if (!survey) {
             return;
         }
+
+        // fade out the current slide
+        setCurrentState({ ...currentState, scrolling: true });
 
         const slides = [...scrollState.current.slides];
 
@@ -134,7 +151,11 @@ const Survey = (props: Props) => {
             ((survey?.outro && newIndex > survey.slides.length) ||
                 (!survey?.outro && newIndex > survey.slides.length - 1))
         ) {
-            setCurrentState({ ...currentState, completed: true });
+            setCurrentState({
+                ...currentState,
+                completed: true,
+                scrolling: false,
+            });
             return;
         }
 
@@ -193,7 +214,11 @@ const Survey = (props: Props) => {
         };
 
         // trigger a re-render
-        setCurrentState({ ...currentState, currentIndex: newIndex });
+        setCurrentState({
+            ...currentState,
+            currentIndex: newIndex,
+            scrolling: slides.length !== 1,
+        });
     };
 
     const onSlideAnswerChange = (
@@ -223,15 +248,19 @@ const Survey = (props: Props) => {
             currentIndex: -1,
             slideHeights: {},
             completed: false,
+            scrolling: true,
         });
     };
 
     const scrollViewScrollTo = (index: number) => {
-        slidesScrollRef?.current?.scrollTo({
-            x: Dimensions.get('window').width * index,
-            y: 0,
-            animated: true,
-        });
+        setTimeout(() => {
+            slidesScrollRef?.current?.scrollTo({
+                x: Dimensions.get('window').width * index,
+                y: 0,
+                animated: false,
+            });
+            cleanupScrollStateOnAnimationEnd();
+        }, 200);
     };
 
     const cleanupScrollStateOnAnimationEnd = () => {
@@ -250,8 +279,14 @@ const Survey = (props: Props) => {
             setCurrentState({
                 ...currentState,
                 currentIndex: scrollState?.current?.currentIndex,
+                scrolling: false,
             });
         }
+
+        setCurrentState({
+            ...currentState,
+            scrolling: false,
+        });
     };
 
     const nextPress = (saveAnswer = false) => {
@@ -325,19 +360,18 @@ const Survey = (props: Props) => {
                         : 300
                 }
             >
-                <ScrollView
-                    style={[]}
+                <Animated.ScrollView
+                    ref={slidesScrollRef}
+                    style={[{ opacity: opacityAnim }]}
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
                     scrollEnabled={false}
-                    ref={slidesScrollRef}
-                    onMomentumScrollEnd={cleanupScrollStateOnAnimationEnd}
                     onContentSizeChange={() =>
                         scrollViewScrollTo(scrollState?.current?.currentIndex)
                     }
                 >
                     {scrollState?.current?.slides}
-                </ScrollView>
+                </Animated.ScrollView>
             </DynamicHeightView>
         </SurveyPanel>
     );

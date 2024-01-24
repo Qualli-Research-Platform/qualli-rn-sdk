@@ -11,6 +11,7 @@ export interface Survey {
     person?: Person;
     outro?: OutroSlide;
     theme: SurveyTheme;
+    delay: number;
 }
 
 // DIFFERENT TYPES

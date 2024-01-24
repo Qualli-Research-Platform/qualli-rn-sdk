@@ -11,7 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import logger from './../helpers/logger';
 import ApiManager from './../networking/ApiManager';
-import { SurveyActions } from './../types/survey';
+import { Survey, SurveyActions } from './../types/survey';
 
 import SurveyWrapper from './../survey/survey-wrapper';
 
@@ -51,11 +51,14 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
         },
     });
 
-    const [surveyState, setSurveyState] = useState({
+    const [surveyState, setSurveyState] = useState<{
+        survey: Survey | undefined;
+    }>({
         survey: undefined,
     });
 
     const appState = useRef(AppState.currentState);
+    const surveyInQueue = useRef(false);
 
     useEffect(() => {
         const subscription = AppState.addEventListener(
@@ -95,12 +98,13 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
             apiKey,
             userKey ? userKey : undefined,
         );
+
         if (
             !response?.success ||
             !response?.app_user_key ||
             !response?.session_key
         ) {
-            console.error('QUALLI: Failed to identify user');
+            logger('QUALLI: Failed to identify user');
             return;
         }
 
@@ -171,11 +175,42 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
             const surveys = res?.data?.surveys?.data;
 
             if (surveys?.length > 0) {
+                if (surveyInQueue.current) return; // a survey is already in queue
+
+                const survey = surveys[0];
+
+                if (survey.delay > 0) {
+                    handleSurveyDelay(survey, res?.data?.timestamp);
+                    return;
+                }
+
                 setSurveyState({ survey: surveys[0] });
                 return;
             }
         }
+
         setSurveyState({ survey: undefined });
+        surveyInQueue.current = false;
+    };
+
+    const handleSurveyDelay = (survey: Survey, timestamp: string) => {
+        // block from loading new surveys
+        const delayInSeconds = survey.delay;
+        // calculate the time with delay
+        const delayedTime = new Date(timestamp);
+        delayedTime.setSeconds(delayedTime.getSeconds() + delayInSeconds);
+
+        // run a timer to check if the delay is over
+        const interval = setInterval(() => {
+            const now = new Date();
+            if (now >= delayedTime) {
+                // delay is over -> show the survey
+                // this._showPopup(survey);
+                setSurveyState({ survey });
+                clearInterval(interval);
+                surveyInQueue.current = false;
+            }
+        }, 200);
     };
 
     const reset = async () => {
@@ -191,7 +226,7 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
         };
 
         setSurveyState({ survey: undefined });
-
+        surveyInQueue.current = false;
         identifyUser();
     };
 

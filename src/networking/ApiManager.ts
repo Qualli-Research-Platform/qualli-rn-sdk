@@ -15,14 +15,15 @@ const ApiManager = {
                 body: {},
                 headers: userKey ? { user_key: userKey } : {},
             });
-
             if (jsonResponse.success) {
                 logger('QUALLI: identify ', jsonResponse);
                 return jsonResponse;
             }
-            console.error('QUALLI: Failed to identify user');
+
+            logger('QUALLI: Failed to identify user');
+            return { success: false };
         } catch (error) {
-            console.error('QUALLI: Failed to identify user: ', error);
+            logger('QUALLI: Failed to identify user: ', error);
             return { success: false };
         }
     },
@@ -40,7 +41,7 @@ const ApiManager = {
         const url = `${API_BASE_PATH}app-user/set-attributes`;
 
         if (!userSessionKey) {
-            console.error('QUALLI: No session ID available');
+            logger('QUALLI: No session ID available');
             return;
         }
         const headers = { 'user-session-key': userSessionKey };
@@ -55,7 +56,7 @@ const ApiManager = {
             });
             logger('QUALLI: Successfully set user attributes');
         } catch (error) {
-            console.error('QUALLI: Error setting user attributes: ', error);
+            logger('QUALLI: Error setting user attributes: ', error);
         }
     },
 
@@ -72,7 +73,7 @@ const ApiManager = {
         const url = `${API_BASE_PATH}app-user-events/trigger`;
 
         if (!userSessionKey) {
-            console.error('QUALLI: No session ID available');
+            logger('QUALLI: No session ID available');
             return;
         }
         const headers = { 'user-session-key': userSessionKey };
@@ -90,9 +91,9 @@ const ApiManager = {
                 logger('QUALLI: Successfully performed trigger');
                 return jsonResponse;
             }
-            console.error('QUALLI: Error performing trigger');
+            logger('QUALLI: Error performing trigger');
         } catch (error) {
-            console.error('QUALLI: Error performing trigger: ', error);
+            logger('QUALLI: Error performing trigger: ', error);
         }
     },
 
@@ -106,7 +107,7 @@ const ApiManager = {
         const url = `${API_BASE_PATH}surveys/${uniqueId}/action`;
 
         if (!userSessionKey) {
-            console.error('QUALLI: No session ID available');
+            logger('QUALLI: No session ID available');
             return;
         }
         const headers = { 'user-session-key': userSessionKey };
@@ -123,7 +124,7 @@ const ApiManager = {
             return res;
         } catch (error: any) {
             logger(error?.response || '');
-            console.error('QUALLI: Error logging the survey action: ', error);
+            logger('QUALLI: Error logging the survey action: ', error);
         }
     },
 
@@ -135,7 +136,7 @@ const ApiManager = {
         const url = `${API_BASE_PATH}app-user-events/store`;
 
         if (!userSessionKey) {
-            console.error('QUALLI: No session ID available');
+            logger('QUALLI: No session ID available');
             return;
         }
         const headers = { 'user-session-key': userSessionKey };
@@ -151,7 +152,7 @@ const ApiManager = {
             logger('QUALLI: Successfully logged the action');
         } catch (error: any) {
             logger(error?.response || '');
-            console.error('QUALLI: Error logging the action: ', error);
+            logger('QUALLI: Error logging the action: ', error);
         }
     },
 };
