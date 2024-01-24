@@ -1,3 +1,5 @@
+import logger from './../helpers/logger';
+
 interface Props {
     apiKey: string;
     url: string;
@@ -30,7 +32,7 @@ const ApiRequest = async (props: Props) => {
         const jsonResponse = await response.json();
         return jsonResponse;
     } catch (error: any) {
-        console.error(`API request error: ${error.message}`);
+        logger(`API request error: ${error.message}`);
         throw error;
     }
 };

@@ -1,7 +1,6 @@
 import React from 'react';
-import { TouchableOpacity, Image, StyleSheet, View } from 'react-native';
-import Button from '../../components/button/button';
-import { SurveyTheme } from '../../..//types';
+import { TouchableOpacity, Image, StyleSheet, View, Text } from 'react-native';
+import { SurveyTheme } from '../../../types';
 
 interface Props {
     companyPlan: string;
@@ -16,15 +15,23 @@ const SurveyHeading = (props: Props) => {
         <View style={styles.container}>
             <View style={styles.leftContainer}>
                 {companyPlan === 'free' && (
-                    <Button
-                        cta="Powered by Qualli"
-                        onClick={() => null}
-                        bgColor={theme.button_color}
-                        textColor={theme.button_text_color}
-                        disabled={false}
-                        style={{ paddingHorizontal: 14, paddingVertical: 8 }}
-                        textStyle={{ fontSize: 12 }}
-                    />
+                    <View
+                        style={{
+                            backgroundColor: theme.button_color,
+                            borderRadius: 12,
+                            fontSize: 12,
+                            paddingHorizontal: 14,
+                            paddingVertical: 8,
+                        }}
+                    >
+                        <Text
+                            style={{
+                                color: theme.button_text_color,
+                            }}
+                        >
+                            Powered by Qualli
+                        </Text>
+                    </View>
                 )}
             </View>
 
