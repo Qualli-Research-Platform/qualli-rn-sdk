@@ -8,7 +8,6 @@ export interface Survey {
         | NPSSlide
         | TextSlide
     >;
-    person?: Person;
     outro?: OutroSlide;
     theme: SurveyTheme;
     delay: number;
@@ -61,6 +60,8 @@ export interface Slide {
     subtitle?: string;
     type: SlideType;
     button_label?: string;
+    logic?: SlideLogic;
+    order?: number;
 }
 
 export interface SurveyTheme {
@@ -73,12 +74,19 @@ export interface SurveyTheme {
     button_text_color: string;
     background_color: string;
 }
-
-interface Person {
-    name: string;
-    role?: string;
-    avatar: string;
+export interface SlideLogic {
+    version: 1;
+    jumps: SlideJump[];
 }
+
+export interface SlideJump {
+    condition: SlideJumpConditions;
+    value: string;
+    selected_values?: { label: string; identifier: string }[];
+    slide_unique_identifier: string;
+}
+
+export const SlideJumpEndKey = '#END_SURVEY';
 
 export enum SlideType {
     'input' = 'input',
@@ -95,4 +103,16 @@ export enum SurveyActions {
     SURVEY_COMPLETED = 'survey_completed',
     SURVEY_SKIPPED = 'survey_skipped',
     SURVEY_SLIDE_ANSWERED = 'survey_slide_answered',
+}
+
+export enum SlideJumpConditions {
+    EQUALS = 'equals',
+    DOES_NOT_EQUAL = 'does_not_equal',
+    GREATER_THAN = 'greater_than',
+    LESS_THAN = 'less_than',
+    GREATER_THAN_OR_EQUAL = 'greater_than_or_equal',
+    LESS_THAN_OR_EQUAL = 'less_than_or_equal',
+    SUBMITTED = 'submitted',
+    INCLUDES_ANY = 'includes_any',
+    INCLUDES_ALL = 'includes_all',
 }

@@ -6,18 +6,29 @@ import {
     Dimensions,
     Keyboard,
     Animated,
+    Text,
+    TouchableOpacity,
+    Linking,
 } from 'react-native';
 
-import { type Survey as SurveyType, SlideType, Slide } from './../types';
+import {
+    Slide,
+    SlideJump,
+    SlideType,
+    SlideJumpEndKey,
+    SurveyTheme,
+    Survey,
+} from './../types';
 
 import DynamicHeightView from './../common/dynamicHeightView';
+import { evaluateJumpCondition } from './../helpers/logic';
 import SurveyPanel from './base/panel/panel';
 import SurveySlide from './base/slide/slide';
 import SurveyHeading from './base/heading/heading';
 import { DIRECT_ANWER_TYPES, SHOW_NEXT_TYPES } from '../config/slide.config';
 
 interface Props {
-    survey?: SurveyType;
+    survey?: Survey;
     isVisible?: boolean;
     answers: { [key: string]: any };
     companyPlan: string;
@@ -27,7 +38,7 @@ interface Props {
     closeSurvey: () => void;
 }
 
-const Survey = (props: Props) => {
+const SurveyMain = (props: Props) => {
     const { survey, isVisible, onComplete, onClose, onAnswer, closeSurvey } =
         props;
     const backgroundColor = survey?.theme.background_color;
@@ -47,12 +58,14 @@ const Survey = (props: Props) => {
         slides: JSX.Element[];
         currentIndex: number;
         currentSlide?: Slide;
+        prevSlides?: Slide[];
         showNext: boolean;
     }>({
         slides: [],
         currentIndex: 0,
         showNext: false,
         currentSlide: undefined,
+        prevSlides: [],
     });
 
     // Create an Animated.Value for controlling opacity
@@ -87,138 +100,263 @@ const Survey = (props: Props) => {
         }
     }, [currentState.currentIndex]);
 
-    useEffect(() => {
-        if (currentState.completed) {
-            onComplete();
-            closeSurvey();
-        }
-    }, [currentState.completed]);
-
     const viewNextSlide = (newIndex: number) => {
         if (!survey) {
             return;
         }
 
-        // fade out the current slide
-        setCurrentState({ ...currentState, scrolling: true });
+        setCurrentState({
+            ...currentState,
+            scrolling: true,
+        });
 
-        const slides = [...scrollState.current.slides];
+        // going back
+        if (newIndex < scrollState?.current?.currentIndex) {
+            // @ts-ignore
+            const nextSlide = scrollState?.current.prevSlides[
+                newIndex
+            ] as Slide;
 
-        if (
-            !!survey?.outro &&
-            survey?.slides.length &&
-            newIndex > survey.slides.length - 1
-        ) {
-            slides.push(
-                <ScrollView
-                    scrollEnabled={false}
-                    key={'outro'}
-                    style={[
-                        {
-                            width: Dimensions.get('window').width,
-                        },
-                    ]}
-                >
-                    <SurveySlide
-                        slide={{
-                            unique_identifier: 'outro',
-                            type: SlideType.outro,
-                            title:
-                                survey?.outro?.title ||
-                                'Thank you for your time!',
-                            subtitle:
-                                survey?.outro?.subtitle ||
-                                'We appreciate your feedback.',
-                            button_label: survey?.outro?.button_label || 'Done',
-                        }}
-                        theme={survey.theme}
-                        onHeightLayout={height => {
-                            handleSlideHeightChange(
-                                height + 24,
-                                newIndex.toString(),
-                            );
-                        }}
-                        onNext={() => closeSurvey()}
-                        onAnswerChange={_ => {}}
-                    />
-                </ScrollView>,
-            );
-        }
+            const updatedPrevSlides =
+                newIndex > 0
+                    ? scrollState.current.prevSlides?.slice(0, newIndex)
+                    : [];
 
-        // did we reach the end?
-        if (
-            survey?.slides &&
-            ((survey?.outro && newIndex > survey.slides.length) ||
-                (!survey?.outro && newIndex > survey.slides.length - 1))
-        ) {
+            scrollState.current = {
+                ...scrollState.current,
+                currentIndex: newIndex,
+                // @ts-ignore
+                currentSlide: nextSlide,
+                prevSlides: updatedPrevSlides,
+                showNext:
+                    SHOW_NEXT_TYPES.indexOf(
+                        // @ts-ignore
+                        nextSlide[newIndex]?.type as SlideType,
+                    ) > -1,
+            };
+
             setCurrentState({
                 ...currentState,
-                completed: true,
-                scrolling: false,
+                currentIndex: newIndex,
+                scrolling: true,
             });
+
             return;
         }
 
-        // only when going forward
-        if (
-            newIndex > scrollState?.current?.currentIndex ||
-            (newIndex === 0 && scrollState?.current?.slides.length === 0)
-        ) {
-            slides.push(
-                <ScrollView
-                    scrollEnabled={false}
-                    key={newIndex}
-                    style={[
-                        {
-                            width: Dimensions.get('window').width,
-                        },
-                    ]}
-                >
-                    <SurveySlide
-                        slide={survey.slides[newIndex]}
-                        theme={survey.theme}
-                        onHeightLayout={height => {
-                            handleSlideHeightChange(
-                                height,
-                                newIndex.toString(),
-                            );
-                        }}
-                        onAnswerChange={val => {
-                            onSlideAnswerChange(
-                                survey.slides[newIndex]?.unique_identifier,
-                                val,
-                                survey.slides[newIndex]?.type,
-                            );
-                        }}
-                        onNext={() =>
-                            nextPress(
-                                SHOW_NEXT_TYPES.includes(
-                                    survey.slides[newIndex]?.type,
-                                ),
-                            )
-                        }
-                        onPrevious={
-                            newIndex > 0 ? () => prevPress() : undefined
-                        }
-                    />
-                </ScrollView>,
-            );
+        let slides = [...scrollState.current.slides];
+
+        // Check if the current slide has logic and an answer has been provided
+        const currentSlide = scrollState.current.currentSlide as Slide;
+        let nextSlide = undefined;
+        let goToEnd = false;
+
+        if (currentSlide?.logic) {
+            const jumps = currentSlide.logic.jumps;
+            let matchedCondition: SlideJump | undefined = undefined;
+
+            if (jumps.length > 0) {
+                // loop over the jumps
+                // evaluate the condition
+                // if true -> set matchedCondition and break the loop to continue
+                // if false -> continue
+                for (let i = 0; i < jumps.length; i++) {
+                    const jump = jumps[i];
+                    const answer =
+                        localAnswers.current[currentSlide.unique_identifier];
+
+                    if (
+                        evaluateJumpCondition(jump, answer, currentSlide.type)
+                    ) {
+                        matchedCondition = jump;
+                        break;
+                    }
+                }
+            }
+
+            if (
+                matchedCondition &&
+                (matchedCondition.slide_unique_identifier ||
+                    matchedCondition.slide_unique_identifier ===
+                        SlideJumpEndKey)
+            ) {
+                // find the slide and assign it to nextSlide
+                if (
+                    matchedCondition.slide_unique_identifier === SlideJumpEndKey
+                ) {
+                    goToEnd = true;
+                } else {
+                    nextSlide = survey.slides.find(
+                        slide =>
+                            slide.unique_identifier ===
+                            matchedCondition?.slide_unique_identifier,
+                    );
+                }
+            }
+        }
+
+        // do we have a specific nextslide?
+        // if yes -> we need to push it as the next slide and scroll
+        // if no ->
+        //     -> do we have a next slide?
+        //         -> yes -> we need to push it as the next slide and scroll
+        //         -> no -> do we have a outro slide?
+        //             -> yes -> we need to push it as the next slide and scroll
+        //             -> no -> we are done
+        if (!!nextSlide) {
+            // we have a specific next slide
+            // we need to push it as the next slide and scroll
+            slides = addSlide(slides, nextSlide, newIndex);
+        } else {
+            // we do not have a specific next slide
+            // do we have a next slide?
+            if (newIndex === 0) {
+                nextSlide = survey.slides[0];
+            } else {
+                if (!goToEnd) {
+                    // Find the next slide based on order or other criteria
+                    nextSlide = survey.slides.find(
+                        slide =>
+                            slide.order ===
+                            (scrollState.current.currentSlide
+                                ?.order as number) +
+                                1,
+                    );
+                }
+            }
+
+            if (!!nextSlide) {
+                slides = addSlide(slides, nextSlide, newIndex);
+            } else {
+                // do we have an outro slide?
+                if (survey.outro) {
+                    onComplete();
+                    slides = addOutroSlide(slides, newIndex);
+                } else {
+                    // we reached the end
+                    setCurrentState({
+                        ...currentState,
+                        scrolling: false,
+                    });
+
+                    // survey has been finished
+                    onComplete();
+                    closeSurvey();
+                    return;
+                }
+            }
+        }
+
+        let updatedPrevSlides = [
+            ...(scrollState.current.prevSlides as Slide[]),
+        ];
+
+        if (newIndex > scrollState?.current.currentIndex) {
+            updatedPrevSlides.push(scrollState.current.currentSlide as Slide);
+        } else if (newIndex === 0) {
+            updatedPrevSlides = [];
         }
 
         scrollState.current = {
             slides: slides,
             currentIndex: newIndex,
-            currentSlide: survey.slides[newIndex],
+            currentSlide: nextSlide,
             showNext:
-                SHOW_NEXT_TYPES.indexOf(survey.slides[newIndex]?.type) > -1,
+                SHOW_NEXT_TYPES.indexOf(nextSlide?.type as SlideType) > -1,
+            prevSlides: updatedPrevSlides,
         };
 
         // trigger a re-render
         setCurrentState({
             ...currentState,
             currentIndex: newIndex,
-            scrolling: slides.length !== 1,
+            scrolling: true,
         });
+    };
+
+    const addOutroSlide = (slides: JSX.Element[], newIndex: number) => {
+        const slidesCopy = [...slides];
+        const survey = props.survey as Survey;
+
+        slidesCopy.push(
+            <ScrollView
+                scrollEnabled={false}
+                key={'outro'}
+                style={[
+                    {
+                        width: Dimensions.get('window').width,
+                    },
+                ]}
+            >
+                <SurveySlide
+                    slide={{
+                        unique_identifier: 'outro',
+                        type: SlideType.outro,
+                        title:
+                            survey?.outro?.title || 'Thank you for your time!',
+                        subtitle:
+                            survey?.outro?.subtitle ||
+                            'We appreciate your feedback.',
+                        button_label: survey?.outro?.button_label || 'Done',
+                    }}
+                    theme={survey.theme as SurveyTheme}
+                    isFreePlan={props.companyPlan === 'free'}
+                    onHeightLayout={height => {
+                        handleSlideHeightChange(
+                            height + 24,
+                            newIndex.toString(),
+                        );
+                    }}
+                    onNext={() => closeSurvey()}
+                    onAnswerChange={_ => {}}
+                />
+            </ScrollView>,
+        );
+        return slidesCopy;
+    };
+
+    const addSlide = (
+        slides: JSX.Element[],
+        slide: Slide,
+        newIndex: number,
+    ) => {
+        const slidesCopy = [...slides];
+        const nextSlideCopy = { ...slide };
+        const survey = props.survey as Survey;
+
+        slidesCopy.push(
+            <ScrollView
+                scrollEnabled={false}
+                key={nextSlideCopy.unique_identifier + '-' + newIndex}
+                style={[
+                    {
+                        width: Dimensions.get('window').width,
+                    },
+                ]}
+            >
+                <SurveySlide
+                    slide={nextSlideCopy as any}
+                    theme={survey.theme}
+                    isFreePlan={props.companyPlan === 'free'}
+                    onHeightLayout={height => {
+                        handleSlideHeightChange(height, newIndex.toString());
+                    }}
+                    onAnswerChange={val => {
+                        onSlideAnswerChange(
+                            nextSlideCopy.unique_identifier,
+                            val,
+                            nextSlideCopy.type,
+                        );
+                    }}
+                    onNext={() =>
+                        nextPress(SHOW_NEXT_TYPES.includes(nextSlideCopy.type))
+                    }
+                    onPrevious={newIndex > 0 ? () => prevPress() : undefined}
+                />
+            </ScrollView>,
+        );
+
+        return slidesCopy;
     };
 
     const onSlideAnswerChange = (
@@ -259,7 +397,10 @@ const Survey = (props: Props) => {
                 y: 0,
                 animated: false,
             });
-            cleanupScrollStateOnAnimationEnd();
+
+            setTimeout(() => {
+                cleanupScrollStateOnAnimationEnd();
+            }, 150);
         }, 200);
     };
 
@@ -327,6 +468,18 @@ const Survey = (props: Props) => {
         }));
     };
 
+    const openQualliWebsiteIfSupported = async () => {
+        const url =
+            'https://usequalli.com?utm_source=qualli&utm_medium=poweredby&utm_campaign=qualli_mobile';
+        const supported = await Linking.canOpenURL(url);
+
+        if (supported) {
+            // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+            // by some browser in the mobile
+            Linking.openURL(url);
+        }
+    };
+
     if (!survey || !isSurveyActive) {
         return null;
     }
@@ -337,13 +490,7 @@ const Survey = (props: Props) => {
             isVisible={!!isVisible}
             onDoneClosing={onPanelDoneClosing}
         >
-            <View style={styles.headingWrapper}>
-                <SurveyHeading
-                    companyPlan={props.companyPlan}
-                    theme={survey?.theme}
-                    onClose={onClose}
-                />
-            </View>
+            <SurveyHeading theme={survey?.theme} onClose={onClose} />
 
             <DynamicHeightView
                 height={
@@ -362,7 +509,11 @@ const Survey = (props: Props) => {
             >
                 <Animated.ScrollView
                     ref={slidesScrollRef}
-                    style={[{ opacity: opacityAnim }]}
+                    style={[
+                        {
+                            opacity: opacityAnim,
+                        },
+                    ]}
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
                     scrollEnabled={false}
@@ -373,19 +524,31 @@ const Survey = (props: Props) => {
                     {scrollState?.current?.slides}
                 </Animated.ScrollView>
             </DynamicHeightView>
+
+            {props.companyPlan === 'free' && (
+                <TouchableOpacity onPress={openQualliWebsiteIfSupported}>
+                    <Text
+                        style={[
+                            styles.footerText,
+                            {
+                                color: survey.theme.title_color,
+                            },
+                        ]}
+                    >
+                        Powered by Qualli
+                    </Text>
+                </TouchableOpacity>
+            )}
         </SurveyPanel>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        ...StyleSheet.absoluteFillObject,
-        zIndex: 99,
-    },
-    headingWrapper: {
-        paddingHorizontal: 16,
-        paddingTop: 16,
+    footerText: {
+        fontSize: 12,
+        marginBottom: 24,
+        textAlign: 'center',
     },
 });
 
-export default Survey;
+export default SurveyMain;

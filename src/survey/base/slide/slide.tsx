@@ -39,6 +39,7 @@ interface Props {
         | TextSlide
         | OutroSlide;
     theme: SurveyTheme;
+    isFreePlan: boolean;
     onHeightLayout: (height: number) => void;
     onAnswerChange: (answer: any) => void;
     onPrevious?: () => void;
@@ -46,8 +47,15 @@ interface Props {
 }
 
 const SurveySlide = (props: Props) => {
-    const { slide, theme, onHeightLayout, onAnswerChange, onPrevious, onNext } =
-        props;
+    const {
+        slide,
+        theme,
+        onHeightLayout,
+        onAnswerChange,
+        onPrevious,
+        onNext,
+        isFreePlan,
+    } = props;
 
     const [contentHeight, setContentHeight] = useState(0);
 
@@ -124,8 +132,16 @@ const SurveySlide = (props: Props) => {
     const isTextOrOutro = type === SlideType.text || type === SlideType.outro;
 
     return (
-        <View onLayout={handleLayout} style={{ paddingBottom: 20 }}>
-            <View style={styles.base.headerContainer}>
+        <View
+            onLayout={handleLayout}
+            style={{ paddingBottom: !isFreePlan ? 20 : 0 }}
+        >
+            <View
+                style={[
+                    styles.base.headerContainer,
+                    isTextOrOutro ? { alignItems: 'center' } : {},
+                ]}
+            >
                 <Text
                     style={[
                         styles.base.title as TextStyle,
