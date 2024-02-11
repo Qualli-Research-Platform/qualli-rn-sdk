@@ -4,6 +4,7 @@ const survey = {
             fontSize: 16,
             fontWeight: 'bold',
             marginBottom: 8,
+            maxWidth: '85%',
         },
         titleCentered: {
             textAlign: 'center',
@@ -16,6 +17,7 @@ const survey = {
         },
         headerContainer: {
             padding: 16,
+            marginTop: 24,
         },
         button: {
             full: {

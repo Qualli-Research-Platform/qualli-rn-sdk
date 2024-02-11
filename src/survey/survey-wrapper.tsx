@@ -42,7 +42,6 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
                 SurveyActions.SURVEY_COMPLETED,
                 {},
             );
-            hideSurvey();
         }
     }, [currentSurveyState.completed]);
 
@@ -157,6 +156,7 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
             SurveyActions.SURVEY_SKIPPED,
             { answers },
         );
+
         hideSurvey();
     };
 
