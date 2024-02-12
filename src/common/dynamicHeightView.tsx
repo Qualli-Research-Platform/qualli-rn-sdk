@@ -22,7 +22,7 @@ const DynamicHeightView: React.FC<DynamicHeightViewProps> = ({
 
         Animated.timing(heightAnim, {
             toValue: height,
-            duration: 150,
+            duration: 250,
             delay: delay !== undefined ? delay : 300,
             useNativeDriver: false,
         }).start();

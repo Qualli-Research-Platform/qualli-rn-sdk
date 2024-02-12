@@ -30,6 +30,7 @@ import SurveySlideNumeric from '../../components/numeric/numeric';
 import { DIRECT_ANWER_TYPES } from '../../../config/slide.config';
 
 interface Props {
+    index: string;
     slide:
         | InputSlide
         | MultipleChoiceSlide
@@ -40,7 +41,7 @@ interface Props {
         | OutroSlide;
     theme: SurveyTheme;
     isFreePlan: boolean;
-    onHeightLayout: (height: number) => void;
+    onHeightLayout: (height: number, index: string) => void;
     onAnswerChange: (answer: any) => void;
     onPrevious?: () => void;
     onNext: (saveAnswer?: boolean) => void;
@@ -48,6 +49,7 @@ interface Props {
 
 const SurveySlide = (props: Props) => {
     const {
+        index,
         slide,
         theme,
         onHeightLayout,
@@ -61,7 +63,7 @@ const SurveySlide = (props: Props) => {
 
     useEffect(() => {
         // set height on panel
-        onHeightLayout(contentHeight);
+        onHeightLayout(contentHeight, index);
     }, [contentHeight]);
 
     if (!slide) {
@@ -72,10 +74,7 @@ const SurveySlide = (props: Props) => {
 
     const handleLayout = (event: LayoutChangeEvent) => {
         const { height } = event.nativeEvent.layout;
-
-        if (contentHeight === 0) {
-            setContentHeight(height);
-        }
+        setContentHeight(height);
     };
 
     const renderSlideInputs = () => {

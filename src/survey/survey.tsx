@@ -37,6 +37,14 @@ interface Props {
     closeSurvey: () => void;
 }
 
+interface ScrollState {
+    slides: JSX.Element[];
+    currentIndex: number;
+    currentSlide?: Slide;
+    prevSlides?: Slide[];
+    showNext: boolean;
+}
+
 const SurveyMain = (props: Props) => {
     const { survey, isVisible, onComplete, onClose, onAnswer, closeSurvey } =
         props;
@@ -46,20 +54,13 @@ const SurveyMain = (props: Props) => {
         currentIndex: -1,
         slideHeights: {},
         completed: false,
-        scrolling: true,
+        firstSlideRendered: false,
+        slides: [] as JSX.Element[],
     });
-    const [isNew, setIsNew] = useState(true);
-    const [isSurveyActive, setIsSurveyActive] = useState(false);
     const slideHeights = React.useRef<any>({});
     const slidesScrollRef = React.useRef<ScrollView>(null);
     const localAnswers = React.useRef<{ [key: string]: string | number }>({});
-    const scrollState = React.useRef<{
-        slides: JSX.Element[];
-        currentIndex: number;
-        currentSlide?: Slide;
-        prevSlides?: Slide[];
-        showNext: boolean;
-    }>({
+    const scrollState = React.useRef<ScrollState>({
         slides: [],
         currentIndex: 0,
         showNext: false,
@@ -71,43 +72,17 @@ const SurveyMain = (props: Props) => {
     const opacityAnim = React.useRef(new Animated.Value(1)).current;
 
     useEffect(() => {
-        // Animate the opacity when currentState.scrolling changes
-        Animated.timing(opacityAnim, {
-            toValue: currentState.scrolling ? 0 : 1,
-            duration: 200,
-            useNativeDriver: true,
-        }).start();
-    }, [currentState.scrolling]);
-
-    useEffect(() => {
-        if (isVisible) {
-            setIsSurveyActive(true);
-        }
-    }, [isVisible]);
-
-    useEffect(() => {
-        if (isVisible && scrollState?.current?.slides.length === 0) {
+        if (isVisible && currentState?.slides.length === 0) {
             viewNextSlide(0);
         } else if (!isVisible) {
             resetState();
         }
     }, [isVisible]);
 
-    useEffect(() => {
-        if (currentState.currentIndex > -1) {
-            scrollViewScrollTo(scrollState?.current?.currentIndex);
-        }
-    }, [currentState.currentIndex]);
-
     const viewNextSlide = (newIndex: number) => {
         if (!survey) {
             return;
         }
-
-        setCurrentState({
-            ...currentState,
-            scrolling: true,
-        });
 
         // going back
         if (newIndex < scrollState?.current?.currentIndex) {
@@ -121,7 +96,7 @@ const SurveyMain = (props: Props) => {
                     ? scrollState.current.prevSlides?.slice(0, newIndex)
                     : [];
 
-            scrollState.current = {
+            const newScrollState = {
                 ...scrollState.current,
                 currentIndex: newIndex,
                 // @ts-ignore
@@ -134,12 +109,7 @@ const SurveyMain = (props: Props) => {
                     ) > -1,
             };
 
-            setCurrentState({
-                ...currentState,
-                currentIndex: newIndex,
-                scrolling: true,
-            });
-
+            slideScrollAnimation(newIndex, newScrollState);
             return;
         }
 
@@ -233,9 +203,10 @@ const SurveyMain = (props: Props) => {
                     slides = addOutroSlide(slides, newIndex);
                 } else {
                     // we reached the end
-                    setCurrentState({
-                        ...currentState,
-                        scrolling: false,
+                    setCurrentState(_ => {
+                        return {
+                            ...currentState,
+                        };
                     });
 
                     // survey has been finished
@@ -256,7 +227,7 @@ const SurveyMain = (props: Props) => {
             updatedPrevSlides = [];
         }
 
-        scrollState.current = {
+        const newScrollState = {
             slides: slides,
             currentIndex: newIndex,
             currentSlide: nextSlide,
@@ -265,11 +236,45 @@ const SurveyMain = (props: Props) => {
             prevSlides: updatedPrevSlides,
         };
 
-        // trigger a re-render
-        setCurrentState({
-            ...currentState,
-            currentIndex: newIndex,
-            scrolling: true,
+        slideScrollAnimation(newIndex, newScrollState);
+    };
+
+    const slideScrollAnimation = async (
+        newIndex: number,
+        newScrollState: ScrollState,
+    ) => {
+        // fade out
+        await fadeScrollview(false, 0);
+        // set the state
+        scrollState.current = newScrollState;
+
+        setCurrentState(prevState => {
+            return {
+                ...prevState,
+                currentIndex: newIndex,
+                slides: newScrollState.slides,
+            };
+        });
+        // scroll the view
+        scrollViewScrollTo(newIndex);
+
+        // fade back in
+        fadeScrollview(true, 300);
+    };
+
+    const fadeScrollview = (
+        toVisible: boolean,
+        delay: number,
+    ): Promise<void> => {
+        return new Promise((resolve: any) => {
+            Animated.timing(opacityAnim, {
+                toValue: toVisible ? 1 : 0,
+                duration: 200,
+                useNativeDriver: true,
+                delay: delay ? delay : 0,
+            }).start(() => {
+                resolve();
+            });
         });
     };
 
@@ -288,6 +293,7 @@ const SurveyMain = (props: Props) => {
                 ]}
             >
                 <SurveySlide
+                    index={newIndex.toString()}
                     slide={{
                         unique_identifier: 'outro',
                         type: SlideType.outro,
@@ -300,12 +306,7 @@ const SurveyMain = (props: Props) => {
                     }}
                     theme={survey.theme as SurveyTheme}
                     isFreePlan={props.companyPlan === 'free'}
-                    onHeightLayout={height => {
-                        handleSlideHeightChange(
-                            height + 24,
-                            newIndex.toString(),
-                        );
-                    }}
+                    onHeightLayout={handleSlideHeightChange}
                     onNext={() => closeSurvey()}
                     onAnswerChange={_ => {}}
                 />
@@ -334,12 +335,11 @@ const SurveyMain = (props: Props) => {
                 ]}
             >
                 <SurveySlide
+                    index={newIndex.toString()}
                     slide={nextSlideCopy as any}
                     theme={survey.theme}
                     isFreePlan={props.companyPlan === 'free'}
-                    onHeightLayout={height => {
-                        handleSlideHeightChange(height, newIndex.toString());
-                    }}
+                    onHeightLayout={handleSlideHeightChange}
                     onAnswerChange={val => {
                         onSlideAnswerChange(
                             nextSlideCopy.unique_identifier,
@@ -374,9 +374,7 @@ const SurveyMain = (props: Props) => {
         }
     };
 
-    const onPanelDoneClosing = () => {
-        setIsSurveyActive(false);
-    };
+    const onPanelDoneClosing = () => {};
 
     const resetState = () => {
         scrollState.current = { slides: [], currentIndex: 0, showNext: false };
@@ -385,7 +383,8 @@ const SurveyMain = (props: Props) => {
             currentIndex: -1,
             slideHeights: {},
             completed: false,
-            scrolling: true,
+            firstSlideRendered: false,
+            slides: [],
         });
     };
 
@@ -416,17 +415,7 @@ const SurveyMain = (props: Props) => {
                     scrollState?.current?.currentIndex + 1,
                 ),
             };
-            setCurrentState({
-                ...currentState,
-                currentIndex: scrollState?.current?.currentIndex,
-                scrolling: false,
-            });
         }
-
-        setCurrentState({
-            ...currentState,
-            scrolling: false,
-        });
     };
 
     const nextPress = (saveAnswer = false) => {
@@ -448,7 +437,6 @@ const SurveyMain = (props: Props) => {
             );
         }
 
-        setIsNew(false);
         viewNextSlide(scrollState?.current?.currentIndex + 1);
     };
 
@@ -457,14 +445,34 @@ const SurveyMain = (props: Props) => {
     };
 
     const handleSlideHeightChange = (height: number, slideIndex: string) => {
-        const newSlideHeights: any = { ...slideHeights.current };
-        newSlideHeights[slideIndex] = height > 0 ? height : 100;
-        slideHeights.current = newSlideHeights;
+        if (height <= 0) return;
 
-        setCurrentState(prevState => ({
-            ...prevState,
-            slideHeights: newSlideHeights,
-        }));
+        setCurrentState(prevState => {
+            // Compute new slide heights based on the previous state
+            const newSlideHeights = {
+                ...prevState.slideHeights,
+                [slideIndex]: height > 0 ? Math.ceil(height) : 100,
+            };
+
+            slideHeights.current = newSlideHeights;
+
+            return {
+                ...prevState,
+                slideHeights: newSlideHeights,
+            };
+        });
+
+        // Return the new state
+        if (!currentState.firstSlideRendered) {
+            setTimeout(() => {
+                setCurrentState(prevState => {
+                    return {
+                        ...prevState,
+                        firstSlideRendered: true,
+                    };
+                });
+            }, 1000);
+        }
     };
 
     const openQualliWebsiteIfSupported = async () => {
@@ -479,34 +487,36 @@ const SurveyMain = (props: Props) => {
         }
     };
 
-    if (!survey || !isSurveyActive) {
+    if (!survey) {
         return null;
     }
 
     return (
         <SurveyPanel
+            key={'main-panel'}
             backgroundColor={backgroundColor}
-            isVisible={!!isVisible}
+            isVisible={!!isVisible && currentState.firstSlideRendered}
             onDoneClosing={onPanelDoneClosing}
         >
-            <SurveyHeading theme={survey?.theme} onClose={onClose} />
+            <SurveyHeading
+                key={'heading'}
+                theme={survey?.theme}
+                onClose={onClose}
+            />
 
             <DynamicHeightView
+                key={'dynamic-height-view'}
                 height={
                     !isVisible
                         ? 0
-                        : slideHeights.current[
-                              `${scrollState?.current?.currentIndex}`
-                          ] || 100
+                        : currentState.slideHeights[
+                              `${currentState.currentIndex}` as keyof typeof currentState.slideHeights
+                          ] || 0
                 }
-                delay={
-                    (scrollState?.current?.currentIndex === 0 && isNew) ||
-                    !isVisible
-                        ? 0
-                        : 300
-                }
+                delay={0}
             >
                 <Animated.ScrollView
+                    key={'survey-slide-container'}
                     ref={slidesScrollRef}
                     style={[
                         {
@@ -520,7 +530,7 @@ const SurveyMain = (props: Props) => {
                         scrollViewScrollTo(scrollState?.current?.currentIndex)
                     }
                 >
-                    {scrollState?.current?.slides}
+                    {currentState?.slides}
                 </Animated.ScrollView>
             </DynamicHeightView>
 
