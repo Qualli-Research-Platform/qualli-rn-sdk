@@ -32,8 +32,10 @@ const SurveySlideStar = (props: Props) => {
                             ? require('../../../assets/icons/star-outline-selected.png')
                             : require('../../../assets/icons/star-outline-not-selected.png')
                     }
-                    style={styles.form.star.icon}
-                    tintColor={theme.answer_color}
+                    style={[
+                        styles.form.star.icon,
+                        { tintColor: theme.answer_color },
+                    ]}
                 />
             </TouchableOpacity>
         );

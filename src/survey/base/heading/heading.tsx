@@ -18,7 +18,9 @@ const SurveyHeading = (props: Props) => {
         >
             <Image
                 source={require('./../../../assets/icons/cross.png')}
-                tintColor={theme.title_color}
+                style={{
+                    tintColor: theme.title_color,
+                }}
             />
         </TouchableOpacity>
     );

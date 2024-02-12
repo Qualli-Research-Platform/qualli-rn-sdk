@@ -83,8 +83,10 @@ const SurveySlideSelect = (props: Props) => {
                     {isSelected && (
                         <Image
                             source={require('../../../assets/icons/check.png')}
-                            style={styles.form.select.icon}
-                            tintColor={theme.answer_color}
+                            style={[
+                                styles.form.select.icon,
+                                { tintColor: theme.answer_color },
+                            ]}
                             resizeMode="contain"
                         />
                     )}
