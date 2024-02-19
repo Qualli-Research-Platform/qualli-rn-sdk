@@ -44,14 +44,14 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
 
     useEffect(() => {
         if (currentSurveyState.completed) {
-            const completedPayload = {
-                survey_unique_identifier: survey?.unique_identifier,
+            const completedPayload: EventCompletedPayload = {
+                survey_unique_identifier: survey?.unique_identifier as string,
                 answers: Object.keys(currentSurveyState.answers).map(key => {
                     return {
-                        slide_unique_id: key,
+                        slide_unique_id: key as string,
                         slide_title: survey?.slides.find(
                             slide => slide.unique_identifier === key,
-                        )?.title,
+                        )?.title as string,
                         answer: currentSurveyState.answers[key],
                     };
                 }),
@@ -63,10 +63,7 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
                 {},
             );
 
-            eventEmitter.emit(
-                SurveyEvents.SURVEY_COMPLETED,
-                completedPayload as EventCompletedPayload,
-            );
+            eventEmitter.emit(SurveyEvents.SURVEY_COMPLETED, completedPayload);
         }
     }, [currentSurveyState.completed]);
 

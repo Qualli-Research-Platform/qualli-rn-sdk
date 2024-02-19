@@ -10,7 +10,7 @@ export interface EventCompletedPayload {
         slide_unique_id: string;
         slide_title: string;
         answer: string | number | Array<string | number>;
-    };
+    }[];
 }
 
 export interface EventShownPayload {
