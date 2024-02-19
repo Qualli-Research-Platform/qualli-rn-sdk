@@ -19,6 +19,10 @@ Welcome to the Qualli RN SDK! This SDK allows you to effortlessly integrate Qual
         -   [Setting Custom Attributes](#setting-custom-attributes)
         -   [Anonymous vs Identified accounts](#anonymous-vs-identified-accounts)
         -   [Identifying your users](#identifying-your-users)
+    -   [Event Listeners](#event-listeners)
+        -   [Available Events](#available-events)
+        -   [Implementing Event Listeners](#implementing-event-listeners)
+        -   [Handling Events](#handling-events)
     -   [Contribution](#contribution)
 
 ## Installation
@@ -168,6 +172,81 @@ qualli.setAttributes({
     company_identifier: 'YOUR_UNIQUE_ID',
 });
 ```
+
+## Event Listeners
+
+Qualli RN SDK provides a powerful way to interact with survey events through `event listeners`. You can respond to various survey lifecycle events such as when a survey is completed, shown, or closed. This feature enables you to execute custom logic in response to these events, enhancing the user experience or gathering additional insights.
+
+### Available Events
+
+-   `SURVEY_COMPLETED`: Fired when a user completes a survey.
+-   `SURVEY_SHOWN`: Fired when a survey is displayed to the user.
+-   `SURVEY_CLOSED`: Fired when a survey is closed without completion.
+
+### Implementing Event Listeners
+
+    To use event listeners, import SurveyEvents from the Qualli RN SDK along with the useQualli hook. You can then register listeners for the events you're interested in. Here's how to implement event listeners for survey events:
+
+```jsx
+import React from 'react';
+import {
+    QualliProvider,
+    useQualli,
+    SurveyEvents,
+    EventCompletedPayload,
+    EventShownPayload,
+    EventClosedPayload,
+} from '@qualli/qualli-rn-sdk';
+
+const Home = () => {
+    const qualli = useQualli();
+
+    React.useEffect(() => {
+        if (!qualli?.authenticated) return;
+
+        // Listener for when a survey is completed
+        const completedListener = qualli.on(
+            SurveyEvents.SURVEY_COMPLETED,
+            (response: EventCompletedPayload) => {
+                console.log('Survey Completed:', response);
+            },
+        );
+
+        // Listener for when a survey is shown
+        const openedListener = qualli.on(
+            SurveyEvents.SURVEY_SHOWN,
+            (response: EventShownPayload) => {
+                console.log('Survey Shown:', response);
+            },
+        );
+
+        // Listener for when a survey is closed
+        const closedListener = qualli.on(
+            SurveyEvents.SURVEY_CLOSED,
+            (response: EventClosedPayload) => {
+                console.log('Survey Closed:', response);
+            },
+        );
+
+        // Cleanup listeners when the component unmounts
+        return () => {
+            completedListener();
+            openedListener();
+            closedListener();
+        };
+    }, [qualli?.authenticated]);
+
+    return (
+        // Your component JSX
+    );
+};
+```
+
+### Handling Events
+
+Each event listener passes a payload object to its callback function, providing details about the survey event. This payload can include information such as the survey ID, user responses, and more, depending on the event.
+
+Use these event listeners to enhance your application's interaction with surveys, such as triggering follow-up actions after a survey is completed, logging analytics events, or customizing the user experience based on survey participation.
 
 ## Contribution
 

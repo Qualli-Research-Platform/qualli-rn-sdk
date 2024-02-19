@@ -11,7 +11,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import logger from './../helpers/logger';
 import ApiManager from './../networking/ApiManager';
+import { eventEmitter } from './../utils/EventEmitter';
+
 import { Survey, SurveyActions } from './../types/survey';
+import {
+    EventClosedPayload,
+    EventCompletedPayload,
+    EventShownPayload,
+    SurveyEvents,
+} from './../types/events';
 
 import SurveyWrapper from './../survey/survey-wrapper';
 
@@ -26,9 +34,19 @@ interface AuthState {
 
 interface QualliContextProps {
     authState: any;
+    authenticated: boolean;
     performTrigger: (trigger: string) => void;
     setAttributes: (attributes: { [key: string]: string | number }) => void;
     reset: () => void;
+    on: (
+        event: SurveyEvents,
+        listener: (
+            response:
+                | EventCompletedPayload
+                | EventShownPayload
+                | EventClosedPayload,
+        ) => void,
+    ) => () => void;
 }
 
 interface QualliProviderProps {
@@ -56,7 +74,7 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
     }>({
         survey: undefined,
     });
-
+    const [authenticated, setAuthenticated] = useState(false);
     const appState = useRef(AppState.currentState);
     const surveyInQueue = useRef(false);
 
@@ -105,6 +123,7 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
             !response?.session_key
         ) {
             logger('QUALLI: Failed to identify user');
+            setAuthenticated(false);
             return;
         }
 
@@ -120,6 +139,8 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
                 plan: response.company_info?.plan,
             },
         };
+
+        setAuthenticated(true);
     };
 
     const saveAppState = async () => {
@@ -230,13 +251,24 @@ export const QualliProvider: React.FC<QualliProviderProps> = ({
         identifyUser();
     };
 
+    const on = (event: SurveyEvents, listener: Function): (() => void) => {
+        eventEmitter.on(event, listener);
+
+        // Return an unsubscribe function
+        return () => {
+            eventEmitter.off(event, listener);
+        };
+    };
+
     return (
         <QualliContext.Provider
             value={{
+                authenticated,
                 authState: authState?.current,
                 performTrigger,
                 setAttributes,
                 reset,
+                on,
             }}
         >
             {children}

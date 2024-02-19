@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { Survey as SurveyType, SurveyActions } from './../types/survey';
+import { eventEmitter } from './../utils/EventEmitter';
+import {
+    EventClosedPayload,
+    EventCompletedPayload,
+    EventShownPayload,
+    SurveyEvents,
+} from './../types/events';
 import Survey from './survey';
 
 interface SurveyComponentProps {
@@ -37,10 +44,28 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
 
     useEffect(() => {
         if (currentSurveyState.completed) {
+            const completedPayload = {
+                survey_unique_identifier: survey?.unique_identifier,
+                answers: Object.keys(currentSurveyState.answers).map(key => {
+                    return {
+                        slide_unique_id: key,
+                        slide_title: survey?.slides.find(
+                            slide => slide.unique_identifier === key,
+                        )?.title,
+                        answer: currentSurveyState.answers[key],
+                    };
+                }),
+            };
+
             logSurveyAction(
                 currentSurveyState?.survey?.unique_identifier as string,
                 SurveyActions.SURVEY_COMPLETED,
                 {},
+            );
+
+            eventEmitter.emit(
+                SurveyEvents.SURVEY_COMPLETED,
+                completedPayload as EventCompletedPayload,
             );
         }
     }, [currentSurveyState.completed]);
@@ -89,6 +114,16 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
                     response?.data?.unique_group_answer_id;
             }
         });
+
+        setCurrentSurveyState(prevState => {
+            return {
+                ...prevState,
+                answers: {
+                    ...prevState.answers,
+                    [slideId]: value,
+                },
+            };
+        });
     };
 
     const showSurvey = (newSurvey: SurveyType) => {
@@ -107,6 +142,10 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
             SurveyActions.SURVEY_SHOWN,
             {},
         );
+
+        eventEmitter.emit(SurveyEvents.SURVEY_SHOWN, {
+            survey_unique_identifier: newSurvey.unique_identifier,
+        } as EventShownPayload);
     };
 
     const hideSurvey = () => {
@@ -116,6 +155,10 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
                 isVisible: false,
             };
         });
+
+        eventEmitter.emit(SurveyEvents.SURVEY_CLOSED, {
+            survey_unique_identifier: survey?.unique_identifier as string,
+        } as EventClosedPayload);
 
         setTimeout(() => {
             setCurrentSurveyState(prevState => {

@@ -1,10 +1,48 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native';
-import { QualliProvider, useQualli } from '@qualli/qualli-rn-sdk';
+import {
+    QualliProvider,
+    useQualli,
+    SurveyEvents,
+    EventCompletedPayload,
+    EventShownPayload,
+    EventClosedPayload,
+} from '@qualli/qualli-rn-sdk';
 
 const Home = () => {
     const qualli = useQualli();
+
+    React.useEffect(() => {
+        if (!qualli?.authenticated) return;
+
+        const completedListener = qualli.on(
+            SurveyEvents.SURVEY_COMPLETED,
+            (response: EventCompletedPayload) => {
+                console.log('survey_completed', response);
+            },
+        );
+
+        const openedListener = qualli.on(
+            SurveyEvents.SURVEY_SHOWN,
+            (response: EventShownPayload) => {
+                console.log('survey_shown', response);
+            },
+        );
+
+        const closedListener = qualli.on(
+            SurveyEvents.SURVEY_CLOSED,
+            (response: EventClosedPayload) => {
+                console.log('survey_closed', response);
+            },
+        );
+
+        return () => {
+            completedListener();
+            openedListener();
+            closedListener();
+        };
+    }, [qualli?.authenticated]);
 
     return (
         <View style={styles.container}>
