@@ -8,6 +8,7 @@ import {
     EventCompletedPayload,
     EventShownPayload,
     EventClosedPayload,
+    EventSkippedPayload,
 } from '@qualli/qualli-rn-sdk';
 
 const Home = () => {
@@ -37,10 +38,18 @@ const Home = () => {
             },
         );
 
+        const skippedListener = qualli.on(
+            SurveyEvents.SURVEY_SKIPPED,
+            (response: EventSkippedPayload) => {
+                console.log('survey_skipped', response);
+            },
+        );
+
         return () => {
             completedListener();
             openedListener();
             closedListener();
+            skippedListener();
         };
     }, [qualli?.authenticated]);
 

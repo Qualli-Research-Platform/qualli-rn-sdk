@@ -6,6 +6,7 @@ import {
     EventClosedPayload,
     EventCompletedPayload,
     EventShownPayload,
+    EventSkippedPayload,
     SurveyEvents,
 } from './../types/events';
 import Survey from './survey';
@@ -46,15 +47,7 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
         if (currentSurveyState.completed) {
             const completedPayload: EventCompletedPayload = {
                 survey_unique_identifier: survey?.unique_identifier as string,
-                answers: Object.keys(currentSurveyState.answers).map(key => {
-                    return {
-                        slide_unique_id: key as string,
-                        slide_title: survey?.slides.find(
-                            slide => slide.unique_identifier === key,
-                        )?.title as string,
-                        answer: currentSurveyState.answers[key],
-                    };
-                }),
+                answers: getEnteredAnswersForEmitter(),
             };
 
             logSurveyAction(
@@ -89,6 +82,18 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
             });
         }
     }, [survey]);
+
+    const getEnteredAnswersForEmitter = () => {
+        return Object.keys(currentSurveyState.answers).map(key => {
+            return {
+                slide_unique_id: key as string,
+                slide_title: survey?.slides.find(
+                    slide => slide.unique_identifier === key,
+                )?.title as string,
+                answer: currentSurveyState.answers[key],
+            };
+        });
+    };
 
     const saveAnswer = async (slideId: string, value: any) => {
         const data: any = {
@@ -191,11 +196,18 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
     const abortSurvey = () => {
         const { survey, answers } = currentSurveyState;
 
+        const skippedPayload: EventSkippedPayload = {
+            survey_unique_identifier: survey?.unique_identifier as string,
+            answers: getEnteredAnswersForEmitter(),
+        };
+
         logSurveyAction(
             survey?.unique_identifier as string,
             SurveyActions.SURVEY_SKIPPED,
             { answers },
         );
+
+        eventEmitter.emit(SurveyEvents.SURVEY_SKIPPED, skippedPayload);
 
         hideSurvey();
     };

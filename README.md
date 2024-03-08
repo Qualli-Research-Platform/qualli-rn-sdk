@@ -182,6 +182,7 @@ Qualli RN SDK provides a powerful way to interact with survey events through `ev
 -   `SURVEY_COMPLETED`: Fired when a user completes a survey.
 -   `SURVEY_SHOWN`: Fired when a survey is displayed to the user.
 -   `SURVEY_CLOSED`: Fired when a survey is closed without completion.
+-   `SURVEY_SKIPPED`: Fired when a survey is skipped with possible partial completion.
 
 ### Implementing Event Listeners
 
@@ -196,6 +197,7 @@ import {
     EventCompletedPayload,
     EventShownPayload,
     EventClosedPayload,
+    EventSkippedPayload,
 } from '@qualli/qualli-rn-sdk';
 
 const Home = () => {
@@ -204,7 +206,7 @@ const Home = () => {
     React.useEffect(() => {
         if (!qualli?.authenticated) return;
 
-        // Listener for when a survey is completed
+        // Listener for when a survey is completed, with answers
         const completedListener = qualli.on(
             SurveyEvents.SURVEY_COMPLETED,
             (response: EventCompletedPayload) => {
@@ -228,11 +230,20 @@ const Home = () => {
             },
         );
 
+        // Listener for when a survey is skipped, with answers
+        const skippedListener = qualli.on(
+            SurveyEvents.SURVEY_SKIPPED,
+            (response: EventSkippedPayload) => {
+                console.log('survey_skipped', response);
+            },
+        );
+
         // Cleanup listeners when the component unmounts
         return () => {
             completedListener();
             openedListener();
             closedListener();
+            skippedListener();
         };
     }, [qualli?.authenticated]);
 

@@ -534,7 +534,7 @@ const SurveyMain = (props: Props) => {
                 </Animated.ScrollView>
             </DynamicHeightView>
 
-            {props.companyPlan === 'free' && (
+            {(props.companyPlan === 'free' || props.companyPlan === 'plus') && (
                 <TouchableOpacity onPress={openQualliWebsiteIfSupported}>
                     <Text
                         style={[
