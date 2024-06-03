@@ -1,6 +1,6 @@
 {
     "name": "@qualli/qualli-rn-sdk",
-    "version": "2.5.0",
+    "version": "2.5.1",
     "description": "Qualli React Native SDK - Product Research on auto-pilot",
     "main": "lib/commonjs/index",
     "module": "lib/module/index",
