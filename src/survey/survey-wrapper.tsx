@@ -229,6 +229,10 @@ const SurveyWrapper: React.FC<SurveyComponentProps> = ({
             }}
         >
             <KeyboardAvoidingView
+                style={{
+                    flex: 1,
+                    justifyContent: 'flex-end',
+                }}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             >
                 <Survey
