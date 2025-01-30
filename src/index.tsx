@@ -1,10 +1,10 @@
 import { useQualli, QualliProvider } from './providers/QualliProvider';
-import { EventSkippedPayload } from '../lib/typescript/src/types/events';
 import {
     SurveyEvents,
     EventCompletedPayload,
     EventShownPayload,
     EventClosedPayload,
+    EventSkippedPayload,
 } from './types';
 
 export { useQualli, QualliProvider, SurveyEvents };
