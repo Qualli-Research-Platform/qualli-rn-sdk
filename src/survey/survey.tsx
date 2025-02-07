@@ -333,6 +333,7 @@ const SurveyMain = (props: Props) => {
                         width: Dimensions.get('window').width,
                     },
                 ]}
+                keyboardShouldPersistTaps="handled"
             >
                 <SurveySlide
                     index={newIndex.toString()}
@@ -491,6 +492,12 @@ const SurveyMain = (props: Props) => {
         return null;
     }
 
+    const dynamicHeight = !isVisible
+        ? 0
+        : currentState.slideHeights[
+              `${currentState.currentIndex}` as keyof typeof currentState.slideHeights
+          ] || 0;
+
     return (
         <SurveyPanel
             key={'main-panel'}
@@ -506,13 +513,7 @@ const SurveyMain = (props: Props) => {
 
             <DynamicHeightView
                 key={'dynamic-height-view'}
-                height={
-                    !isVisible
-                        ? 0
-                        : currentState.slideHeights[
-                              `${currentState.currentIndex}` as keyof typeof currentState.slideHeights
-                          ] || 0
-                }
+                height={dynamicHeight}
                 delay={0}
             >
                 <Animated.ScrollView
@@ -529,12 +530,13 @@ const SurveyMain = (props: Props) => {
                     onContentSizeChange={() =>
                         scrollViewScrollTo(scrollState?.current?.currentIndex)
                     }
+                    keyboardShouldPersistTaps="handled"
                 >
                     {currentState?.slides}
                 </Animated.ScrollView>
             </DynamicHeightView>
 
-            {(props.companyPlan === 'free' || props.companyPlan === 'plus') && (
+            {props.companyPlan === 'free' && (
                 <TouchableOpacity onPress={openQualliWebsiteIfSupported}>
                     <Text
                         style={[
